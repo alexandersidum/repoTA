@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "655204709529",
+    "firebase_url": "https://monitoring-pengadaan-c7a8d.firebaseio.com",
+    "project_id": "monitoring-pengadaan-c7a8d",
+    "storage_bucket": "monitoring-pengadaan-c7a8d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:655204709529:android:f24b14c7ce060e00457408",
+        "android_client_info": {
+          "package_name": "com.example.Monitoring"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "655204709529-s69ar5b9r1c3h7q8l6r37np7uig8r1ql.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDV-2nLrWSlDmcuiwXW9nFS3xW6w9-RJg4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "655204709529-s69ar5b9r1c3h7q8l6r37np7uig8r1ql.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
