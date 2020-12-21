@@ -3,6 +3,7 @@
 import 'package:Monitoring/Model/rekap.dart';
 import 'package:Monitoring/Model/ServiceRekap.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 
 class MonRekap extends StatefulWidget {
@@ -42,15 +43,15 @@ class _MonRekapState extends State<MonRekap> {
     });
   }
 
-  _createRekap() {
-    _showProgress('Creating Table...');
-    ServiceRekap.createTable().then((result){
-      if  ('success' == result){
-        _showSnackBar(context, result);
+  // _createRekap() {
+  //   _showProgress('Creating Table...');
+  //   ServiceRekap.createTable().then((result){
+  //     if  ('success' == result){
+  //       _showSnackBar(context, result);
 
-      }
-    });
-  }
+  //     }
+  //   });
+  // }
  _showSnackBar(context, message) {
     _scaffoldKey.currentState.showSnackBar(SnackBar(
       content: Text(message),
@@ -166,7 +167,8 @@ SingleChildScrollView _databody(){
             }
             ),
             DataCell(
-            Text(rekap.totalPengadaan.toUpperCase()),
+            Text(NumberFormat.currency(locale: 'id', symbol: 'Rp ').format(int.parse(rekap.totalPengadaan)),
+              ),
             onTap: (){
               _showValues(rekap);
               _selectedRekap = rekap;
@@ -198,11 +200,11 @@ SingleChildScrollView _databody(){
         appBar: AppBar(
           title: Text(_titleProgress),
           actions: <Widget>[
-            IconButton(
-                icon: Icon(Icons.add),
-                onPressed: () {
-                 _createRekap();
-                }),
+            // IconButton(
+            //     icon: Icon(Icons.add),
+            //     onPressed: () {
+            //      _createRekap();
+            //     }),
                 IconButton(
                 icon: Icon(Icons.refresh),
                 onPressed: () {

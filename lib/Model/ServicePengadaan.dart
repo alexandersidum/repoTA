@@ -59,7 +59,7 @@ static Future<String> addProses(String namaPengadaan,  String metodePengadaan, S
     map['pagu_pengadaan'] = paguPengadaan;
     map['hps_pengadaan'] = hpsPengadaan;
     map['tanggal_pengadaan'] = tanggalPengadaan;
-    map['usulan_status'] = usulanStatus;    
+    map['usulan_status'] = usulanStatus; 
     final response = await http.post(ROOT, body:map);
     print ("addProses Response: ${response.body}");
     if(200 == response.statusCode){

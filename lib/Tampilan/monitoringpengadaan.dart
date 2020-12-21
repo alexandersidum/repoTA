@@ -7,6 +7,7 @@ import 'dart:async';
 import 'package:Monitoring/Model/prosesKegiatan.dart';
 import 'package:Monitoring/Model/ServicePengadaan.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 // import 'package:intl/intl.dart';
 
 
@@ -39,10 +40,10 @@ class _MonPengadaanState extends State<MonPengadaan> {
   List<Proses> _filterProses;
   GlobalKey<ScaffoldState> _scaffoldKey;
   TextEditingController _namaPengadaanController;
-  TextEditingController _tanggalPengadaanController;
   TextEditingController _metodePengadaanController;
   TextEditingController _paguPengadaanController;
   TextEditingController _hpsPengadaanController;
+  TextEditingController _tanggalPengadaanController;
   TextEditingController _usulanStatusController;
   Proses _selectedProses;
   bool _isUpdating;
@@ -75,10 +76,10 @@ class _MonPengadaanState extends State<MonPengadaan> {
     _titleProgress = widget.title;
     _scaffoldKey = GlobalKey();
     _namaPengadaanController = TextEditingController();
-    _tanggalPengadaanController = TextEditingController();
     _metodePengadaanController = TextEditingController();
     _paguPengadaanController = TextEditingController();
     _hpsPengadaanController = TextEditingController();
+    _tanggalPengadaanController = TextEditingController();
     _usulanStatusController = TextEditingController();
   }
   // _showSnackBar(context,message){
@@ -108,6 +109,7 @@ class _MonPengadaanState extends State<MonPengadaan> {
   }
    _addProses() {
        if (_namaPengadaanController.text.trim().isEmpty ||
+        _metodePengadaanController.text.trim().isEmpty ||
            _paguPengadaanController.text.trim().isEmpty ||
            _hpsPengadaanController.text.trim().isEmpty ||
            _tanggalPengadaanController.text.trim().isEmpty ||
@@ -155,7 +157,6 @@ _getProses() {
         _metodePengadaanController.text = '';
         _paguPengadaanController.text = '';
         _hpsPengadaanController.text = '';
-        _usulanStatusController.text = '';
         _tanggalPengadaanController.text = '';
         _usulanStatusController.text = '';
       }
@@ -254,14 +255,15 @@ SingleChildScrollView _databody(){
             _selectedProses = proses;
             }),
           DataCell(
-          Text(proses.paguPengadaan.toUpperCase()),    
+          Text(NumberFormat.currency(locale: 'id', symbol: 'Rp ').format(int.parse(proses.paguPengadaan)),),    
         
           onTap: (){
             _showValues(proses);
             _selectedProses = proses;
           }),
             DataCell(
-            Text(proses.hpsPengadaan.toUpperCase()),
+            Text( NumberFormat.currency(locale: 'id', symbol: 'Rp ').format(int.parse(proses.hpsPengadaan),),
+            ),
             onTap: (){
               _showValues(proses);
               _selectedProses = proses;
@@ -333,7 +335,7 @@ searchField(){
             IconButton(
                 icon: Icon(Icons.add),
                 onPressed: () {
-                 _createProses();
+                  _createProses();
                 }),
                 IconButton(
                 icon: Icon(Icons.refresh),

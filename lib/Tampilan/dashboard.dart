@@ -60,14 +60,14 @@ class _DashboardState extends State<Dashboard> {
                             SizedBox(
                               height: 20.0,
                             ),
-                            Text(
-                              "Role :",
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 17.0
-                              ),
-                            ),
+                            // Text(
+                            //   "Role :",
+                            //   style: TextStyle(
+                            //     color: Colors.black,
+                            //     fontWeight: FontWeight.bold,
+                            //     fontSize: 17.0
+                            //   ),
+                            // ),
                             
                             Text(
                               Provider.of<Auth>(context).getUserInfo.getRole(),

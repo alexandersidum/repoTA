@@ -44,15 +44,15 @@ class _MonLpseState extends State<MonLpse> {
     });
   }
 
- _createLpse() {
-    _showProgress('Creating Table...');
-    ServiceLpse.createTable().then((result){
-      if  ('success' == result){
-        _showSnackBar(context, result);
+//  _createLpse() {
+//     _showProgress('Creating Table...');
+//     ServiceLpse.createTable().then((result){
+//       if  ('success' == result){
+//         _showSnackBar(context, result);
 
-      }
-    });
-  }
+//       }
+//     });
+//   }
  _showSnackBar(context, message) {
     _scaffoldKey.currentState.showSnackBar(SnackBar(
       content: Text(message),
@@ -218,11 +218,11 @@ SingleChildScrollView _databody(){
         appBar: AppBar(
           title: Text(_titleProgress),
           actions: <Widget>[
-            IconButton(
-                icon: Icon(Icons.add),
-                onPressed: () {
-                 _createLpse();
-                }),
+            // IconButton(
+            //     icon: Icon(Icons.add),
+            //     onPressed: () {
+            //      _createLpse();
+            //     }),
                 IconButton(
                 icon: Icon(Icons.refresh),
                 onPressed: () {

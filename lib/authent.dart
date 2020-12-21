@@ -103,6 +103,7 @@ Future<Akun> checkUserInfo(uid) async{
     await _firestore.collection('users').doc(uid).get().then((value) {
       if(value.exists) {
         int role = value.data()[['role']];
+        // print("Rolenya adalah $role");
         switch (role) {
           case 0:
             _userInfo = Unit.fromDb(value.data());
@@ -124,6 +125,7 @@ Future<Akun> checkUserInfo(uid) async{
             _userInfo = Unit.fromDb(value.data());
         }
         }
+        
     } 
     );
     return _userInfo;

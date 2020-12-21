@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:Monitoring/Model/Ekatalog.dart';
 import 'package:Monitoring/Model/ServiceEkatalog.dart';
+import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 
 class MonEkatalog extends StatefulWidget {
   MonEkatalog() : super();
@@ -39,15 +41,15 @@ class _MonEkatalogState extends State<MonEkatalog> {
     });
   }
 
-  _createEkatalog() {
-    // print("berhasil");
-    _showProgress('Creating Table...');
-    ServiceEkat.createTable1().then((result){
-      if  ('success' == result){
-        _showSnackBar(context, result);
-      }
-    });
-  }
+  // _createEkatalog() {
+  //   // print("berhasil");
+  //   _showProgress('Creating Table...');
+  //   ServiceEkat.createTable1().then((result){
+  //     if  ('success' == result){
+  //       _showSnackBar(context, result);
+  //     }
+  //   });
+  // }
  _showSnackBar(context, message) {
     _scaffoldKey.currentState.showSnackBar(SnackBar(
       content: Text(message),
@@ -59,6 +61,7 @@ class _MonEkatalogState extends State<MonEkatalog> {
         _jumlahTransaksiController.text.trim().isEmpty) {
         print("Empty fields");
        return;
+       
     }
     _showProgress('Adding Ekatalog...');
       ServiceEkat.addEkatalog(_namaUnitController.text, _jumlahTransaksiController.text).then((result){ // controller integer
@@ -164,7 +167,8 @@ SingleChildScrollView _databody(){
             }
             ),
             DataCell(
-            Text(ekatalog.jumlahTransaksi.toString()),
+            Text(
+              NumberFormat.currency(locale: 'id', symbol: 'Rp ').format(int.parse(ekatalog.jumlahTransaksi)),),
             onTap: (){
               _showValues(ekatalog);
               _selectedEkatalog = ekatalog;
@@ -197,11 +201,11 @@ SingleChildScrollView _databody(){
         appBar: AppBar(
           title: Text(_titleProgress),
           actions: <Widget>[
-            IconButton(
-                icon: Icon(Icons.add),
-                onPressed: () {
-                 _createEkatalog();
-                }),
+            // IconButton(
+            //     icon: Icon(Icons.add),
+            //     onPressed: () {
+            //      _createEkatalog();
+            //     }),
                 IconButton(
                 icon: Icon(Icons.refresh),
                 onPressed: () {
@@ -226,6 +230,10 @@ SingleChildScrollView _databody(){
               Padding(
                 padding: EdgeInsets.all(20.0),
                 child: TextField(
+                   inputFormatters: <TextInputFormatter>[
+        // ignore: deprecated_member_use
+        WhitelistingTextInputFormatter.digitsOnly
+    ],
                   controller: _jumlahTransaksiController,
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration.collapsed(hintText: 'Jumlah Transaksi',
