@@ -28,33 +28,32 @@ static Future<String> createTable() async {
    return "error";
   }
 }
-static Future<List<Proses>> getProses() async {
-  try{
+static Future<void> getProses(Function callback) async {
     var map = Map<String, dynamic>();
     map["action"] = _GET_PRO_ACTION;
     final response = await http.post(ROOT, body:map);
     print ("getProses Response: ${response.body}");
     if (200 == response.statusCode){
       List<Proses> list = parseResponse(response.body);
-      return list;
+      callback(list);
     }else{
-      return List<Proses>();
+      callback(List());
     }
-  }catch(e){
-    return List<Proses>();
-  }
-
 }
 static List<Proses> parseResponse(String responseBody) {
+  print("Masuk ke parsed Response");
   final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
+  print(parsed);
   return parsed.map<Proses>((json) =>Proses.fromJson(json)).toList();
+
 }
 
-static Future<String> addProses(String namaPengadaan,  String metodePengadaan, String paguPengadaan, String hpsPengadaan, String tanggalPengadaan, String usulanStatus) async{
+static Future<String> addProses(String namaPengadaan, String namaPenyedia,  String metodePengadaan, String paguPengadaan, String hpsPengadaan,String tanggalPengadaan, String usulanStatus) async{
    try{
     var map = Map<String, dynamic>();
     map['action'] = _ADD_PRO_ACTION;
     map['nama_pengadaan'] = namaPengadaan;
+    map['nama_penyedia'] = namaPenyedia;
     map['metode_pengadaan'] = metodePengadaan;
     map['pagu_pengadaan'] = paguPengadaan;
     map['hps_pengadaan'] = hpsPengadaan;
@@ -63,7 +62,7 @@ static Future<String> addProses(String namaPengadaan,  String metodePengadaan, S
     final response = await http.post(ROOT, body:map);
     print ("addProses Response: ${response.body}");
     if(200 == response.statusCode){
-     return response.body;
+     return "success";
     }else{
       return "error";
     }
@@ -71,16 +70,17 @@ static Future<String> addProses(String namaPengadaan,  String metodePengadaan, S
     return "error";
   }
 }
-static Future<String> updateProses(String proId, String namaPengadaan, String metodePengadaan, String paguPengadaan, String  hpsPengadaan, String tanggalPengadaan, String usulanStatus) async{
+static Future<String> updateProsesUKPBJ(String proId, String usulanStatus) async{
   try{
     var map = Map<String,dynamic>();
     map['action'] = _UPDATE_PRO_ACTION;
     map['pro_id'] = proId;
-    map['nama_pengadaan'] = namaPengadaan;
-    map['metode_pengadaan'] = metodePengadaan;
-    map['pagu_pengadaan'] = paguPengadaan;
-    map['hps_pengadaan'] = hpsPengadaan;
-    map['tanggal_pengadaan'] = tanggalPengadaan;
+    // map['nama_pengadaan'] = namaPengadaan;
+    // map['nama_penyedia'] = namaPenyedia;
+    // map['metode_pengadaan'] = metodePengadaan;
+    // map['pagu_pengadaan'] = paguPengadaan;
+    // map['hps_pengadaan'] = hpsPengadaan;
+    // map['tanggal_pengadaan'] = tanggalPengadaan;
     map['usulan_status'] = usulanStatus;
     final response = await http.post(ROOT, body: map);
     print("updateProses Response : ${response.body}");
@@ -93,6 +93,55 @@ static Future<String> updateProses(String proId, String namaPengadaan, String me
     return "error";
   }
 }
+static Future<String> updateProsesDp(String proId, String namaPengadaan, String namaPenyedia, String metodePengadaan, String paguPengadaan, String usulanStatus) async{
+  try{
+    var map = Map<String,dynamic>();
+    map['action'] = _UPDATE_PRO_ACTION;
+    map['pro_id'] = proId;
+    map['nama_pengadaan'] = namaPengadaan;
+    map['nama_penyedia'] = namaPenyedia;
+    map['metode_pengadaan'] = metodePengadaan;
+    map['pagu_pengadaan'] = paguPengadaan;
+    // map['hps_pengadaan'] = hpsPengadaan;
+    // map['tanggal_pengadaan'] = tanggalPengadaan;
+    map['usulan_status'] = usulanStatus;
+    final response = await http.post(ROOT, body: map);
+    print("updateProses Response : ${response.body}");
+    if(200 == response.statusCode){
+      return response.body;
+    } else {
+      return "error";
+    }
+  }catch(e){
+    return "error";
+  }
+}
+static Future<String> updateProsesPPK(String proId, String namaPengadaan, String namaPenyedia, String metodePengadaan, String paguPengadaan, String hpsPengadaan, String tanggalPengadaan, String total, String usulanStatus) async{
+  try{
+    var map = Map<String,dynamic>();
+    map['action'] = _UPDATE_PRO_ACTION;
+    map['pro_id'] = proId;
+     map['nama_pengadaan'] = namaPengadaan;
+     map['nama_penyedia'] = namaPenyedia;
+    map['metode_pengadaan'] = metodePengadaan;
+    map['pagu_pengadaan'] = paguPengadaan;
+    map['hps_pengadaan'] = hpsPengadaan;
+    map['tanggal_pengadaan'] = tanggalPengadaan;
+    map['total'] =  total;
+    map['usulan_status'] = usulanStatus;
+    final response = await http.post(ROOT, body: map);
+    print("updateProses Response : ${response.body}");
+    if(200 == response.statusCode){
+      return response.body;
+    } else {
+      return "error";
+    }
+  }catch(e){
+    return "error";
+  }
+}
+
+
 static Future<String> deleteProses(String proId) async{
   try{
     var map = Map<String,dynamic>();
