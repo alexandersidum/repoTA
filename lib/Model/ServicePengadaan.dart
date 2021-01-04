@@ -5,7 +5,7 @@ import 'package:http/http.dart'
 import 'prosesKegiatan.dart';
 
 class ServicePengadaan{
-  static const ROOT = 'http://192.168.100.168/EkatalogDB/pengadaan_action.php';
+  static const ROOT = 'http://192.168.100.170/EkatalogDB/pengadaan_action.php';
   static const _CREATE_TABLE_ACTION = 'CREATE_TABLE';
   static const _GET_PRO_ACTION = 'GET_PRO';
   static const _ADD_PRO_ACTION = 'ADD_PRO';
@@ -48,7 +48,7 @@ static List<Proses> parseResponse(String responseBody) {
 
 }
 
-static Future<String> addProses(String namaPengadaan, String namaPenyedia,  String metodePengadaan, String paguPengadaan, String hpsPengadaan,String tanggalPengadaan, String usulanStatus) async{
+static Future<String> addProses(String namaPengadaan, String namaPenyedia,  String metodePengadaan, String paguPengadaan, String hpsPengadaan, String usulanStatus,{String tanggalPengadaan}) async{
    try{
     var map = Map<String, dynamic>();
     map['action'] = _ADD_PRO_ACTION;
@@ -57,7 +57,7 @@ static Future<String> addProses(String namaPengadaan, String namaPenyedia,  Stri
     map['metode_pengadaan'] = metodePengadaan;
     map['pagu_pengadaan'] = paguPengadaan;
     map['hps_pengadaan'] = hpsPengadaan;
-    map['tanggal_pengadaan'] = tanggalPengadaan;
+    map['tanggal_pengadaan'] =  tanggalPengadaan != null ? tanggalPengadaan : " ";
     map['usulan_status'] = usulanStatus; 
     final response = await http.post(ROOT, body:map);
     print ("addProses Response: ${response.body}");

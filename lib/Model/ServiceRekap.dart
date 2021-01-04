@@ -4,7 +4,7 @@ import 'package:http/http.dart'
 import 'rekap.dart';
 
 class ServiceRekap{
-  static const ROOT = 'http://192.168.100.168/EkatalogDB/rekap_action.php';
+  static const ROOT = 'http://192.168.100.170/EkatalogDB/rekap_action.php';
   static const _CREATE_TABLE_ACTION = 'CREATE_TABLE';
   static const _GET_REK_ACTION = 'GET_REK';
   static const _ADD_REK_ACTION = 'ADD_REK';

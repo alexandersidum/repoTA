@@ -11,7 +11,7 @@ class  Proses{
   String usulanStatus;
 
  //belumterlaksana
-  
+  static List<String> listMethod =  ['Pengadaan Langsung', 'Penunjukan Langsung', 'Tender Cepat', 'Tender'];
 //monitoring proeses pengadaan
 
 

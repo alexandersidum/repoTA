@@ -4,7 +4,7 @@ import 'package:http/http.dart'
 import 'lpse.dart';
 
 class ServiceLpse{
-  static const ROOT = 'http://192.168.100.168/EkatalogDB/lpse_action.php';
+  static const ROOT = 'http://192.168.100.170/EkatalogDB/lpse_action.php';
   static const _CREATE_TABLE_ACTION = 'CREATE_TABLE';
   static const _GET_LPSE_ACTION = 'GET_LPSE';
   static const _ADD_LPSE_ACTION = 'ADD_LPSE';

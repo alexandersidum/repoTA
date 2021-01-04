@@ -4,7 +4,7 @@ import 'Ekatalog.dart';
 
 
 class ServiceEkat {
-  static const ROOT = 'http://192.168.100.168/EkatalogDB/ekatalog_action.php';
+  static const ROOT = 'http://192.168.100.170/EkatalogDB/ekatalog_action.php';
   static const _CREATE_TABLE = 'CREATE_TABLE';
   static const _GET_ALL_ACTION = 'GET_CAT';
   static const _ADD_CAT_ACTION = 'ADD_CAT';

@@ -83,72 +83,8 @@ class _DashboardState extends State<Dashboard> {
                         ),
                       ),
                     ),
-                    SizedBox(
-                      width: 160.0,
-                      height: 130.0,
-                      child: Card(
-                        color: Colors.green[600],
-                        child: Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Column(
-                            children: <Widget>[
-                              Text(
-                                "Jumlah Transaksi",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize:18.0
-                                ),
-                              ),
-                            SizedBox(
-                              height: 70.0,
-                            ),  
-                            Text(
-                              "20 Pengadaan",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize:14.0
-                                ),
-                            )
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 150.0,
-                      height: 130.0,
-                      child: Card(
-                        color: Color.fromARGB(196, 196, 196, 196),
-                        child: Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Column(
-                            children: <Widget>[
-                              Text(
-                                "Jumlah Paket",
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize:18.0
-                                ),
-                              ),
-                            SizedBox(
-                              height: 70.0,
-                            ),  
-                            Text(
-                              "20 Paket",
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize:14.0
-                                ),
-                            )
-                            ],
-                          ),
-                        ),
-                      ),
-                    )
+                    
+                    
                   ],
                 ),
               ),

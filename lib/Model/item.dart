@@ -1,23 +1,22 @@
 class Item {
 
-
+  String id;
   String judul;
-  String isi;
-  String namaunit;
+  String unit;
+  String tanggal;
   
 //monitoring pengadaan
 
+  Item({this.id,this.judul, this.unit,this.tanggal});
 
 
-  Item({this.judul, this.isi, this.namaunit,});
-
-
-  factory Item.fromDb(Map<String, dynamic> parsedData){
+  factory Item.fromDb(Map<String, dynamic> parsedData, String docId){
     return(
       Item(
-        judul: parsedData['judul'],
-        isi: parsedData['isi'],
-        namaunit : parsedData['namaunit'],
+        id : docId,
+        judul: parsedData.isNotEmpty&&parsedData['judul']!=null?parsedData['judul']:"",
+        unit :  parsedData.isNotEmpty&&parsedData['unit']!=null?parsedData['unit']:"",
+        tanggal: parsedData.isNotEmpty&&parsedData['tanggal']!=null?parsedData['tanggal']:"",
       ));
 
   }
@@ -25,8 +24,7 @@ class Item {
   Map<String , dynamic> toMap(){
     return{
       'judul' : this.judul,
-      'isi' : this.isi,
-      'namaunit' : this.namaunit,
+      'unit' : this.unit,
 
     };
   }

@@ -1,6 +1,9 @@
+import 'package:Monitoring/Tampilan/usulanUI.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'Model/item.dart';
+import 'Model/itemService.dart';
 import 'Tampilan/login.dart';
 import 'Tampilan/SignUp.dart';
 import 'Tampilan/Home.dart';
@@ -25,7 +28,13 @@ class MyApp extends StatelessWidget {
       ]);
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context)=>Auth())
+        ChangeNotifierProvider(create: (context)=>Auth()),
+        StreamProvider<List<Item>>(
+          create: (context) => ItemService(
+          ).getItems(),
+          updateShouldNotify: (_, __) => true,
+          
+        ),
       ],
       child: MaterialApp(
         theme: ThemeData.light(

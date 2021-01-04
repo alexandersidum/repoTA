@@ -1,13 +1,9 @@
 import 'package:Monitoring/Tampilan/dashboard.dart';
-import 'package:Monitoring/Tampilan/usulanUnit.dart';
+import 'package:Monitoring/Tampilan/usulanUI.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:Monitoring/authent.dart';
-//import 'package:Monitoring/Database/database';
 import 'package:Monitoring/Tampilan/Monitoring.dart';
-//import 'package:Monitoring/Tampilan/usulanUI.dart';
-//import 'package:Monitoring/Tampilan/usulanWR.dart';
-//import 'package:Monitoring/Tampilan/usulanPPK.dart';
 //import 'package:Monitoring/konstan.dart';
 
 
@@ -33,7 +29,7 @@ List<Widget> _listPage = [
       key: PageStorageKey('dashboard'),),
     Monitoring(
       key: PageStorageKey('monitoring')),
-    ProposalScreen(
+    UsulanUI(
       key: PageStorageKey('usulan')),
 
   ];

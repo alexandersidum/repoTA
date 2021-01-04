@@ -5,7 +5,7 @@
 // import 'package:Monitoring/Model/lpse.dart';
 import 'dart:async';
 
-// import 'package:Monitoring/Model/datePicker.dart';
+import 'package:Monitoring/Komponen/datePicker.dart';
 import 'package:Monitoring/Model/prosesKegiatan.dart';
 import 'package:Monitoring/Model/ServicePengadaan.dart';
 import 'package:flutter/material.dart';
@@ -37,6 +37,7 @@ class Debouncerr{
     }
 }
 
+
 class _MonPengadaanState extends State<MonPengadaan> {
   List<Proses> _prosess;
   List<Proses> _filterProses;
@@ -46,31 +47,44 @@ class _MonPengadaanState extends State<MonPengadaan> {
   TextEditingController _metodePengadaanController;
   TextEditingController _paguPengadaanController;
   TextEditingController _hpsPengadaanController;
-  TextEditingController _tanggalPengadaanController;
+  // TextEditingController _tanggalPengadaanController;
   TextEditingController _usulanStatusController;
   Proses _selectedProses;
   bool _isUpdating;
   String _titleProgress;
   final _debouncer = Debouncerr(milliseconds: 1000);
+  var selectedMethod;
+  
+// final Proses proses;
+// _MonPengadaanState({this.proses});
 
 
+  String pilihTanggal,labelText;
+  DateTime tgl = DateTime.now();
+   final TextStyle valueStyle = TextStyle(fontSize: 16.0);
+  Future<Null> _selectedDate(BuildContext context) async{
+  final DateTime picked = await showDatePicker(context: context,
+   initialDate: tgl, firstDate: DateTime(1990), lastDate: DateTime(2099));
+  if (picked != null && picked != tgl){
+    setState(() {
+      tgl = picked;
+      pilihTanggal = new DateFormat.yMd().format(tgl);
 
-//   String pilihTanggal,labelText;
-//   DateTime tgl = DateTime.now();
-//    final TextStyle valueStyle = TextStyle(fontSize: 16.0);
-//   Future<Null> _selectedDate(BuildContext context) async{
-//   final DateTime picked = await showDatePicker(context: context,
-//    initialDate: tgl, firstDate: DateTime(1990), lastDate: DateTime(2099));
-//   if (picked != null && picked != tgl){
-//     setState(() {
-//       tgl = picked;
-//       pilihTanggal = new DateFormat.yMd().format(tgl);
-
-//     });
+    });
    
-//   }
+  }
 
-// }
+}
+List<DropdownMenuItem> dropDownMenu(Map input) {
+    List<DropdownMenuItem> output = [];
+    input.forEach((key, value) {
+      output.add(DropdownMenuItem<int>(
+        child: Text(value),
+        value: key,
+      ));
+    });
+    return output;
+  }
 
   @override
   void initState() {
@@ -85,7 +99,7 @@ class _MonPengadaanState extends State<MonPengadaan> {
     _metodePengadaanController = TextEditingController();
     _paguPengadaanController = TextEditingController();
     _hpsPengadaanController = TextEditingController();
-    _tanggalPengadaanController = TextEditingController();
+    // _tanggalPengadaanController = TextEditingController();
     _usulanStatusController = TextEditingController();
   }
   // _showSnackBar(context,message){
@@ -127,7 +141,7 @@ class _MonPengadaanState extends State<MonPengadaan> {
        return;
     }
     _showProgress('Adding Proses...');
-      ServicePengadaan.addProses(_namaPengadaanController.text, _namaPenyediaController.text,  _metodePengadaanController.text, _paguPengadaanController.text,_hpsPengadaanController.text,_tanggalPengadaanController.text,  _usulanStatusController.text).then((result)
+      ServicePengadaan.addProses(_namaPengadaanController.text, _namaPenyediaController.text,  selectedMethod, _paguPengadaanController.text,_hpsPengadaanController.text, _usulanStatusController.text).then((result)
       {
          if  ('success' == result){
           //  print('sukses');
@@ -178,9 +192,10 @@ _getProses() {
     _showProgress('Updating Ekatalog...');
     var total = int.parse(proses.paguPengadaan) + int.parse(_hpsPengadaanController.text);
     ServicePengadaan.updateProsesPPK(
-            proses.id, _namaPengadaanController.text, _namaPenyediaController.text,  _metodePengadaanController.text, _paguPengadaanController.text, _hpsPengadaanController.text, _tanggalPengadaanController.text, total.toString(), _usulanStatusController.text) 
+            proses.id, _namaPengadaanController.text, _namaPenyediaController.text,  selectedMethod, _paguPengadaanController.text, _hpsPengadaanController.text, tgl.toString(),total.toString(), _usulanStatusController.text) 
         .then((result) {
       if ('success' == result) {
+        _getProses();
         setState(() {
           _isUpdating = false;
         });
@@ -189,7 +204,7 @@ _getProses() {
         // _metodePengadaanController.text = '';
         // _paguPengadaanController.text = '';
         _hpsPengadaanController.text = '';
-        _tanggalPengadaanController.text = '';
+        // _tanggalPengadaanController.text = '';
         _usulanStatusController.text = '';
       }
     });
@@ -233,7 +248,7 @@ _getProses() {
     _metodePengadaanController.text = proses.metodePengadaan; 
     _paguPengadaanController.text = proses.paguPengadaan;
     _hpsPengadaanController.text = proses.hpsPengadaan;
-    _tanggalPengadaanController.text = proses.tanggalPengadaan;
+    // tgl.toString() = proses.tanggalPengadaan;
     _usulanStatusController.text = proses.usulanStatus;
     
 
@@ -247,13 +262,15 @@ _getProses() {
         _metodePengadaanController.text = '';
         _paguPengadaanController.text = '';
         _hpsPengadaanController.text = '';
-        _tanggalPengadaanController.text = '';
+        // tgl = '';
         _usulanStatusController.text = '';
         
   }
 
 
 SingleChildScrollView _databody(){
+
+
   _filterProses.forEach((Proses e) { 
       print(e.id);
       print(e.metodePengadaan);
@@ -312,7 +329,11 @@ SingleChildScrollView _databody(){
         ),
       ],
       rows: _filterProses.map(
-        (proses) => DataRow(cells: [
+        (proses){
+           DateTime tgl = DateTime.parse(proses.tanggalPengadaan);
+           var tanggal =  "${tgl.day} - ${tgl.month} - ${tgl.year}";
+          
+           return DataRow(cells: [
             DataCell(
             Container(
             width: 200,
@@ -323,7 +344,9 @@ SingleChildScrollView _databody(){
               _selectedProses = proses;
           }),
           DataCell(
-            Text(proses.namaPenyedia.toString()),
+            proses.namaPenyedia.isNotEmpty && proses.namaPenyedia!=null?
+            Text(proses.namaPenyedia.toString()
+            ):"",
             onTap: (){
               _showValues(proses);
               _selectedProses = proses;
@@ -359,7 +382,7 @@ SingleChildScrollView _databody(){
                     }),
             DataCell(
               proses.tanggalPengadaan.isNotEmpty && proses.tanggalPengadaan!=null?
-            Text(proses.tanggalPengadaan):
+            Text(tanggal):
             Text(""),
             onTap: (){
               _showValues(proses);
@@ -392,7 +415,7 @@ SingleChildScrollView _databody(){
             ))
         ]
 
-      )).toList(),
+      );}).toList(),
       ),
     ),
       
@@ -419,10 +442,6 @@ searchField(){
               _filterProses = _prosess
               .where((u) =>
               (u.usulanStatus.toLowerCase().contains(string.toLowerCase()))).toList();
-              
-              
-              
-
             }
             );
           },
@@ -432,6 +451,7 @@ searchField(){
 
   @override
   Widget build(BuildContext context) {
+    
        return Scaffold(
         key: _scaffoldKey,
         appBar: AppBar(
@@ -462,55 +482,73 @@ searchField(){
                   ),
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.all(20.0),
-                child: TextField(
-                  controller: _namaPenyediaController,
-                  decoration: InputDecoration.collapsed(hintText: 'Nama Penyedia',
-
-                  ),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.all(20.0),
-                child: TextField(
-                  controller: _metodePengadaanController,
-                  // keyboardType: TextInputType.number,
-                  decoration: InputDecoration.collapsed(hintText: 'Metode Pengadaan',
-
-                  ),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.all(20.0),
-                child: TextField(
-                  controller: _paguPengadaanController,
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration.collapsed(hintText: 'Pagu',
-
-                  ),
-                ),
-              ),
-              //  Padding(
+              // Padding(
               //   padding: EdgeInsets.all(20.0),
               //   child: TextField(
-              //     controller: _hpsPengadaanController,
+              //     controller: _namaPenyediaController,
+              //     decoration: InputDecoration.collapsed(hintText: 'Nama Penyedia',
+
+              //     ),
+              //   ),
+              // ),
+              // Padding(
+              //   padding: EdgeInsets.all(20.0),
+              //   child: TextField(
+              //     controller: _metodePengadaanController,
+              //     decoration: InputDecoration.collapsed(hintText: 'Metode Pengadaan',
+
+              //     ),
+              //   ),
+              // ),
+              
+              
+              DropdownButtonHideUnderline(
+                      child: DropdownButton(
+                        hint: Text("      Metode"),
+                          isExpanded: true,
+                          dropdownColor: Colors.white,
+                          value: selectedMethod,
+                          items: Proses.listMethod
+                              .map((e) => DropdownMenuItem<String>(
+                                    child: Text(e),
+                                    value: e,
+                                  ))
+                              .toList(),
+                          onChanged: (value) {
+                            setState(() {
+                              selectedMethod = value;
+                              
+                            });
+                          }),
+                    ),
+              // Padding(
+              //   padding: EdgeInsets.all(20.0),
+              //   child: TextField(
+              //     controller: _paguPengadaanController,
               //     keyboardType: TextInputType.number,
-              //     decoration: InputDecoration.collapsed(hintText: 'HPS',
+              //     decoration: InputDecoration.collapsed(hintText: 'Pagu',
 
               //     ),
               //   ),
               // ),
-              //  Padding(
-              //   padding: EdgeInsets.all(20.0),
-              //   child: TextField(
-              //     controller: _tanggalPengadaanController,
-              //     // keyboardType: TextInputType.number,
-              //     decoration: InputDecoration.collapsed(hintText: 'Tanggal Pengadaan',
+               Padding(
+                padding: EdgeInsets.all(20.0),
+                child: TextField(
+                  controller: _hpsPengadaanController,
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration.collapsed(hintText: 'HPS',
 
-              //     ),
-              //   ),
-              // ),
+                  ),
+                ),
+              ),
+              DateDropDown(
+              labelText: labelText,
+              valueText: new DateFormat.yMd().format(tgl),
+              valueStyle: valueStyle,
+              onPressed: () {
+                _selectedDate(context);
+              },
+            ),
               Padding(
                 padding: EdgeInsets.all(20.0),
                 child: TextField(
@@ -521,6 +559,8 @@ searchField(){
                   ),
                 ),
               ),
+
+
 
               _isUpdating? 
               Row(children: <Widget>[
