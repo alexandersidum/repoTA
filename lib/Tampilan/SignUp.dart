@@ -31,7 +31,7 @@ class _SignUpScreen extends State<SignUp>{
 
 
   String validationText = '';
-  var roles = ['Direktorat Perencana', 'UKPBJ', 'PPK', 'Unit'];
+  var roles = ['Unit' ,'Direktorat Perencanaan', 'UKPBJ', 'PPK', 'PP', 'Pokja'];
   var selectedRolesDesc;
   //var selectedRoles = null;
 

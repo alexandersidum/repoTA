@@ -48,10 +48,11 @@ static List<Rekap> parseResponse(String responseBody) {
   return parsed.map<Rekap>((json) =>Rekap.fromJson(json)).toList();
 }
 
-static Future<String> addRekap(String namaPengadaans, String totalPengadaan) async{
+static Future<String> addRekap(String tahun, String namaPengadaans, String totalPengadaan) async{
    try{
     var map = Map<String, dynamic>();
     map['action'] = _ADD_REK_ACTION;
+    map['tahun'] = tahun;
     map['nama_pengadaans'] = namaPengadaans;
     map['total_pengadaan'] = totalPengadaan;
     final response = await http.post(ROOT, body:map);
@@ -65,11 +66,12 @@ static Future<String> addRekap(String namaPengadaans, String totalPengadaan) asy
     return "error";
   }
 }
-static Future<String> updateRekap(String rekId, String namaPengadaans, String totalPengadaan) async{
+static Future<String> updateRekap(String rekId, String tahun, String namaPengadaans, String totalPengadaan) async{
   try{
     var map = Map<String,dynamic>();
     map['action'] = _UPDATE_REK_ACTION;
     map['rek_id'] = rekId;
+    map['tahun'] = tahun;
     map['nama_pengadaans'] = namaPengadaans;
     map['total_pengadaan'] = totalPengadaan;
     final response = await http.post(ROOT, body: map);

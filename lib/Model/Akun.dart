@@ -6,18 +6,24 @@ class Akun {
   String getRole() {
   switch(this.role){
     case 0:
-      return"Unit";
+      return"Akun";
       break;
     case 1:
-      return"Direktorat Perencanaan";
+      return"Unit";
       break;
     case 2:
-      return"UKPBJ";
+      return"Direktorat Perencanaan";
       break;
     case 3:
-      return"PPK";
+      return"UKPBJ";
       break;
     case 4:
+      return"PPK";
+      break;
+    case 5:
+      return"Pejabat Pengadaan";
+      break;
+    case 6:
       return"Pokja";
       break;
   }
@@ -93,6 +99,7 @@ class Unit extends Akun{
     );
   }
 }
+
 class PPK extends Akun{
 
 
@@ -101,6 +108,23 @@ class PPK extends Akun{
 
   factory PPK.fromDb(Map<String, dynamic> parsedData){
     return PPK(
+      
+      email: parsedData['email'],
+      name:parsedData['name'],
+      registrationDate:parsedData['registrationDate'].toString(),
+      role:parsedData['role'],
+      uid:parsedData['uid'],
+    );
+  }
+}
+class PP extends Akun{
+  String unit;
+
+  PP({String name, String email,  String registrationDate, String uid, int role, })
+  :super(name: name, email: email, registrationDate: registrationDate, uid: uid, role: role);
+
+  factory PP.fromDb(Map<String, dynamic> parsedData){
+    return PP(
       
       email: parsedData['email'],
       name:parsedData['name'],

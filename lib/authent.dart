@@ -106,23 +106,29 @@ Future<Akun> checkUserInfo(uid) async{
         // print("Rolenya adalah $role");
         switch (role) {
           case 0:
-            _userInfo = Unit.fromDb(value.data());
+            _userInfo = Akun.fromDb(value.data());
             break;
           case 1:
-            _userInfo = Dp.fromDb(value.data());
+            _userInfo = Unit.fromDb(value.data());
             break;
           case 2:
-            _userInfo = UKPBJ.fromDb(value.data());
+            _userInfo = Dp.fromDb(value.data());
             break;
           case 3:
-            _userInfo = PPK.fromDb(value.data()); 
+            _userInfo = UKPBJ.fromDb(value.data()); 
             break;
-          case 3:
+          case 4:
+            _userInfo = PPK.fromDb(value.data());
+            break;
+          case 5:
+            _userInfo = PP.fromDb(value.data()); 
+            break;
+            case 5:
             _userInfo = Pokja.fromDb(value.data()); 
             break;
              
           default:
-            _userInfo = Unit.fromDb(value.data());
+            _userInfo = Akun.fromDb(value.data());
         }
         }
         

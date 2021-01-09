@@ -26,6 +26,7 @@ class _MonLpseState extends State<MonLpse> {
   @override
   void initState() {
     super.initState();
+    _getLpse();
     _lpses = [];
     _isUpdating = false;
     _titleProgress = widget.title;
@@ -55,7 +56,7 @@ class _MonLpseState extends State<MonLpse> {
 //   }
  _showSnackBar(context, message) {
     _scaffoldKey.currentState.showSnackBar(SnackBar(
-      content: Text(message),
+     content: Text("Ditambahkan"),
     ));
   }
    _addLpse() {
@@ -70,6 +71,7 @@ class _MonLpseState extends State<MonLpse> {
       ServiceLpse.addLpse(_namaPaketController.text,  _jenisPengadaanController.text, _statusPengadaanController.text).then((result)
       {
          if  ('success' == result){
+           _showSnackBar(context, result);
            _getLpse();
            }
          _clearValues();

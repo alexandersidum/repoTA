@@ -1,8 +1,12 @@
+import 'package:Monitoring/Tampilan/UIEkatalog.dart';
+import 'package:Monitoring/Tampilan/UIRekap.dart';
 import 'package:flutter/material.dart';
 import 'package:Monitoring/Tampilan/monitoringekatalog.dart';
-import 'package:Monitoring/Tampilan/monitoringpengadaan.dart';
+// import 'package:Monitoring/Tampilan/monitoringpengadaan.dart';
 import 'package:Monitoring/Tampilan/monitoringLpse.dart';
-import 'package:Monitoring/Tampilan/monitoringrekap.dart';
+// import 'package:Monitoring/Tampilan/monitoringrekap.dart';
+
+import 'monitorinUI.dart';
 //import 'package:Monitoring/Komponen/kustom_button.dart';
 //import 'package:provider/provider.dart';
 //import 'package:Monitoring/Database/database.dart';
@@ -34,7 +38,7 @@ class _MonitoringState extends State<Monitoring> {
           color: Colors.yellowAccent,
           onPressed: (){
             Navigator.push(context, MaterialPageRoute(
-                      builder: (context) => MonPengadaan()
+                      builder: (context) => MonitoringPUI()
             )
           );
           },
@@ -52,7 +56,7 @@ class _MonitoringState extends State<Monitoring> {
           color: Colors.green[400],
           onPressed: (){
             Navigator.push(context, MaterialPageRoute(
-                      builder: (context) => MonEkatalog()
+                      builder: (context) => UIEkatalog()
             )
           );
           },
@@ -88,7 +92,7 @@ class _MonitoringState extends State<Monitoring> {
           color: Colors.blueAccent,
           onPressed: (){
             Navigator.push(context, MaterialPageRoute(
-                      builder: (context) => MonRekap()
+                      builder: (context) => UIRekap()
             )
           );
           },

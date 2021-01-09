@@ -1,8 +1,4 @@
-// import 'dart:developer';
-//KURANG TOTAL TIDAK BISA TERSIMPAN DI DATACELL
-//HPS TETAP 0 SAAT TERISI
 
-// import 'package:Monitoring/Model/lpse.dart';
 import 'dart:async';
 
 import 'package:Monitoring/Komponen/datePicker.dart';
@@ -42,9 +38,10 @@ class _MonPengadaanState extends State<MonPengadaan> {
   List<Proses> _prosess;
   List<Proses> _filterProses;
   GlobalKey<ScaffoldState> _scaffoldKey;
+  TextEditingController _namaUnitController;
   TextEditingController _namaPengadaanController;
   TextEditingController _namaPenyediaController;
-  TextEditingController _metodePengadaanController;
+  TextEditingController _nilaiKontrakController;
   TextEditingController _paguPengadaanController;
   TextEditingController _hpsPengadaanController;
   // TextEditingController _tanggalPengadaanController;
@@ -54,9 +51,10 @@ class _MonPengadaanState extends State<MonPengadaan> {
   String _titleProgress;
   final _debouncer = Debouncerr(milliseconds: 1000);
   var selectedMethod;
+  var searchMethod;
+  bool onSearch = false;
+  String searchedText;
   
-// final Proses proses;
-// _MonPengadaanState({this.proses});
 
 
   String pilihTanggal,labelText;
@@ -73,87 +71,51 @@ class _MonPengadaanState extends State<MonPengadaan> {
     });
    
   }
-
 }
-List<DropdownMenuItem> dropDownMenu(Map input) {
-    List<DropdownMenuItem> output = [];
-    input.forEach((key, value) {
-      output.add(DropdownMenuItem<int>(
-        child: Text(value),
-        value: key,
-      ));
-    });
-    return output;
-  }
+// List<DropdownMenuItem> dropDownMenu(Map input) {
+//     List<DropdownMenuItem> output = [];
+//     input.forEach((key, value) {
+//       output.add(DropdownMenuItem<int>(
+//         child: Text(value),
+//         value: key,
+//       ));
+//     });
+//     return output;
+//   }
 
   @override
   void initState() {
     super.initState();
+    _getProses();
     _prosess = [];
     _isUpdating = false;
     _filterProses =[];
     _titleProgress = widget.title;
     _scaffoldKey = GlobalKey();
+    _namaUnitController = TextEditingController();
     _namaPengadaanController = TextEditingController();
     _namaPenyediaController = TextEditingController();
-    _metodePengadaanController = TextEditingController();
     _paguPengadaanController = TextEditingController();
     _hpsPengadaanController = TextEditingController();
-    // _tanggalPengadaanController = TextEditingController();
+    _nilaiKontrakController = TextEditingController();
     _usulanStatusController = TextEditingController();
   }
-  // _showSnackBar(context,message){
-  //   _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text(message),),);
 
-  // }
   _showProgress(String message){
     setState(() {
       _titleProgress = message;
     });
   }
 
- _createProses() {
-    _showProgress('Creating Table...');
-    ServicePengadaan.createTable().then((result){
-      if  ('success' == result){
-        _showSnackBar(context, result);
 
-      }
-    });
-  }
-  
  _showSnackBar(context, message) {
     _scaffoldKey.currentState.showSnackBar(SnackBar(
-      content: Text(message),
+      content: Text("Ditambahkan"),
     ));
   }
-   _addProsesDp() {
-       if (_namaPengadaanController.text.trim().isEmpty ||
-           _namaPenyediaController.text.trim().isEmpty ||
-           _metodePengadaanController.text.trim().isEmpty ||
-           _paguPengadaanController.text.trim().isEmpty ||
-          //  _hpsPengadaanController.text.trim().isEmpty ||
-          //  _tanggalPengadaanController.text.trim().isEmpty ||
-           _usulanStatusController.text.trim().isEmpty 
-           
-        ) {
-        print("Empty fields");
-       return;
-    }
-    _showProgress('Adding Proses...');
-      ServicePengadaan.addProses(_namaPengadaanController.text, _namaPenyediaController.text,  selectedMethod, _paguPengadaanController.text,_hpsPengadaanController.text, _usulanStatusController.text).then((result)
-      {
-         if  ('success' == result){
-          //  print('sukses');
-           _getProses();
-           }
-           print(result);
-         _clearValues();
-     });
-
-  }
+   
 _getProses() {
-    _showProgress('Loading Lpse...');
+    _showProgress('Loading Pengadaan...');
     ServicePengadaan.getProses((List<Proses> listProses) {
       if (listProses.isNotEmpty) {
         setState(() {
@@ -168,68 +130,34 @@ _getProses() {
 
 
 
-  _updateProsesDp(Proses proses) {
+ 
+    _updateProsesPPK(Proses proses) async {
     _showProgress('Updating Ekatalog...');
-    ServicePengadaan.updateProsesDp(
-            proses.id, _namaPengadaanController.text, _namaPenyediaController.text,  _metodePengadaanController.text, _paguPengadaanController.text, _usulanStatusController.text) 
+    // var sisaAnggaran = int.parse(proses.paguPengadaan) - int.parse(_nilaiKontrakController.text);
+    var sisaAnggaran = 0;
+    if(proses.paguPengadaan.isNotEmpty&& proses.nilaiKontrak.isNotEmpty){
+      sisaAnggaran = int.parse(proses.paguPengadaan) - int.parse(_nilaiKontrakController.text);
+    }
+    await ServicePengadaan.updateProsesPPK(
+            proses.id, _namaUnitController.text, _namaPengadaanController.text, tgl.toString(), _namaPenyediaController.text,  selectedMethod, _paguPengadaanController.text, _hpsPengadaanController.text, _nilaiKontrakController.text, sisaAnggaran.toString(), _usulanStatusController.text) 
         .then((result) {
       if ('success' == result) {
-        setState(() {
-          _isUpdating = false;
-        });
-        _namaPengadaanController.text = '';
-        _namaPenyediaController.text = '';
-        _metodePengadaanController.text = '';
-        _paguPengadaanController.text = '';
-        // _hpsPengadaanController.text = '';
-        // _tanggalPengadaanController.text = '';
-        _usulanStatusController.text = '';
-      }
-    });
-
-  }
-    _updateProsesPPK(Proses proses) {
-    _showProgress('Updating Ekatalog...');
-    var total = int.parse(proses.paguPengadaan) + int.parse(_hpsPengadaanController.text);
-    ServicePengadaan.updateProsesPPK(
-            proses.id, _namaPengadaanController.text, _namaPenyediaController.text,  selectedMethod, _paguPengadaanController.text, _hpsPengadaanController.text, tgl.toString(),total.toString(), _usulanStatusController.text) 
-        .then((result) {
-      if ('success' == result) {
+        _showSnackBar(context, result);
         _getProses();
         setState(() {
           _isUpdating = false;
         });
-        // _namaPengadaanController.text = '';
-        // _namaPenyediaController.text = '';
-        // _metodePengadaanController.text = '';
-        // _paguPengadaanController.text = '';
+        
+        
+         _paguPengadaanController.text = '';
         _hpsPengadaanController.text = '';
-        // _tanggalPengadaanController.text = '';
+        
         _usulanStatusController.text = '';
       }
     });
 
   }
-   _updateProsesUKPBJ(Proses proses) {//dan pokja
-    _showProgress('Updating Ekatalog...');
-    ServicePengadaan.updateProsesUKPBJ(
-            proses.id, _usulanStatusController.text) 
-        .then((result) {
-      if ('success' == result) {
-        setState(() {
-          _isUpdating = false;
-        });
-        // _namaPengadaanController.text = '';
-        // _namaPenyediaController.text = '';
-        // _metodePengadaanController.text = '';
-        // _paguPengadaanController.text = '';
-        // _hpsPengadaanController.text = '';
-        // _tanggalPengadaanController.text = '';
-        _usulanStatusController.text = '';
-      }
-    });
-
-  }
+  
   void _deleteProses(Proses proses) {
     _showProgress('Deleting Employee...');
     ServicePengadaan.deleteProses(proses.id).then((result) {
@@ -243,12 +171,14 @@ _getProses() {
   }
 
    _showValues(Proses proses) {//memunculkan value yang nantinya ditunjukkan
+   _namaUnitController.text = proses.namaUnit;
     _namaPengadaanController.text = proses.namaPengadaan;
     _namaPenyediaController.text = proses.namaPenyedia;
-    _metodePengadaanController.text = proses.metodePengadaan; 
+    selectedMethod = proses.metodePengadaan;
     _paguPengadaanController.text = proses.paguPengadaan;
     _hpsPengadaanController.text = proses.hpsPengadaan;
-    // tgl.toString() = proses.tanggalPengadaan;
+    _nilaiKontrakController.text = proses.nilaiKontrak;
+    
     _usulanStatusController.text = proses.usulanStatus;
     
 
@@ -257,12 +187,12 @@ _getProses() {
     });
   }
  void _clearValues(){
+      
         _namaPengadaanController.text = '';
-        _namaPenyediaController.text = '';
-        _metodePengadaanController.text = '';
+        _namaPenyediaController.text = '';   
         _paguPengadaanController.text = '';
         _hpsPengadaanController.text = '';
-        // tgl = '';
+        _nilaiKontrakController.text = '';
         _usulanStatusController.text = '';
         
   }
@@ -273,13 +203,15 @@ SingleChildScrollView _databody(){
 
   _filterProses.forEach((Proses e) { 
       print(e.id);
+      print(e.namaUnit);
       print(e.metodePengadaan);
       print(e.namaPengadaan);
+      print(e.tanggalPengadaan);
       print(e.namaPenyedia);
       print(e.paguPengadaan);
       print(e.hpsPengadaan);
-      print(e.tanggalPengadaan);
-      print(e.total);
+      print(e.nilaiKontrak);
+      print(e.sisaAnggaran);
       print(e.usulanStatus);
     });
   return SingleChildScrollView(
@@ -287,12 +219,16 @@ SingleChildScrollView _databody(){
     child: SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: DataTable(columns: [
-        // DataColumn(
-        //   label: Text('ID'),
+        DataColumn(
+          label: Text('Nama Unit'),
         
-        // ),
+        ),
          DataColumn(
           label: Text('Nama Pengadaan'),
+        
+        ),
+         DataColumn(
+          label: Text('Tanggal Pengadaan'),
         
         ),
         DataColumn(
@@ -311,12 +247,12 @@ SingleChildScrollView _databody(){
           label: Text('HPS'),
         
         ),
-         DataColumn(
-          label: Text('Tanggal Pengadaan'),
-        
+        DataColumn(
+          label: Text('Nilai Kontrak')
+
         ),
         DataColumn(
-          label: Text('Total'),
+          label: Text('Sisa Anggaran'),
         
         ),
          DataColumn(
@@ -330,10 +266,22 @@ SingleChildScrollView _databody(){
       ],
       rows: _filterProses.map(
         (proses){
-           DateTime tgl = DateTime.parse(proses.tanggalPengadaan);
-           var tanggal =  "${tgl.day} - ${tgl.month} - ${tgl.year}";
+ var tanggal = "";
+if(proses.tanggalPengadaan.isNotEmpty&&proses.tanggalPengadaan.trim().length>1){
+DateTime tgl = DateTime.parse(proses.tanggalPengadaan);
+tanggal =  "${tgl.day} - ${tgl.month} - ${tgl.year}";
+print(proses.tanggalPengadaan);
+}
           
            return DataRow(cells: [
+              DataCell(
+            
+            Text(proses.namaUnit.toString()
+            ),
+            onTap: (){
+              _showValues(proses);
+              _selectedProses = proses;
+            }),
             DataCell(
             Container(
             width: 200,
@@ -344,15 +292,23 @@ SingleChildScrollView _databody(){
               _selectedProses = proses;
           }),
           DataCell(
-            proses.namaPenyedia.isNotEmpty && proses.namaPenyedia!=null?
-            Text(proses.namaPenyedia.toString()
-            ):"",
+              proses.tanggalPengadaan.isNotEmpty && proses.tanggalPengadaan!=null?
+            Text(tanggal):
+            Text(""),
             onTap: (){
               _showValues(proses);
               _selectedProses = proses;
             }),
           DataCell(
-          Text(proses.metodePengadaan.toUpperCase()),
+            
+            Text(proses.namaPenyedia.toString()
+            ),
+            onTap: (){
+              _showValues(proses);
+              _selectedProses = proses;
+            }),
+          DataCell(
+          Text(proses.metodePengadaan.toString()),
           onTap: (){
             _showValues(proses);
             _selectedProses = proses;
@@ -380,20 +336,28 @@ SingleChildScrollView _databody(){
                       _showValues(proses);
                       _selectedProses = proses;
                     }),
+                    DataCell(
+                      proses.nilaiKontrak.isNotEmpty && proses.nilaiKontrak != null?
+                        Text(
+                          NumberFormat.currency(locale: 'id', symbol: 'Rp ')
+                              .format(
+                            int.parse(proses.nilaiKontrak),
+                          ),
+                        ):
+                        Text(
+                          "0"
+                          )
+                        , onTap: () {
+                      _showValues(proses);
+                      _selectedProses = proses;
+                    }),
+            
             DataCell(
-              proses.tanggalPengadaan.isNotEmpty && proses.tanggalPengadaan!=null?
-            Text(tanggal):
-            Text(""),
-            onTap: (){
-              _showValues(proses);
-              _selectedProses = proses;
-            }),
-            DataCell(
-             proses.total.isNotEmpty && proses.total!=null?
+            proses.sisaAnggaran.isNotEmpty && proses.sisaAnggaran!=null?
             Text(
               NumberFormat.currency(locale: 'id', symbol: 'Rp ')
                               .format(
-                            int.parse(proses.total),),): 
+                            int.parse(proses.sisaAnggaran),),): 
                             Text(
                           "0"
                           )
@@ -424,44 +388,111 @@ SingleChildScrollView _databody(){
 
 }
 
-searchField(){
-  return Padding(
-    padding : EdgeInsets.all(20.0),
-    child: TextField(
-      decoration: InputDecoration(
-        contentPadding: EdgeInsets.all(5.0),
-        hintText: 'Filter by Status',
-      ),
-          onChanged: (string){
-            _debouncer.run((){
-
-              setState(() {
-                
-              });
-
+searchField() {
+    return Padding(
+      padding: EdgeInsets.all(10.0),
+      child: TextField(
+        decoration: InputDecoration(
+          contentPadding: EdgeInsets.all(5.0),
+          hintText: 'Filter by Status',
+        ),
+        onChanged: (string) {
+          _debouncer.run(() {
+            
+            searchedText = string;
+            if (string != null || string != '') {
+              onSearch = true;
               _filterProses = _prosess
-              .where((u) =>
-              (u.usulanStatus.toLowerCase().contains(string.toLowerCase()))).toList();
+                .where((u) => (u.usulanStatus
+                    .toLowerCase()
+                    .contains(string.toLowerCase())))
+                .toList();
+            }else{
+              onSearch = false;
             }
-            );
-          },
-    ),
-  );
+            setState(() {});
+          });
+        },
+      ),
+    );
+  }
+Widget searchedMethod(){
+return Padding( padding : EdgeInsets.all(10.0),
+
+child: DropdownButtonHideUnderline(
+                      child: DropdownButton(
+                        hint: Text("Filter Metode"),
+                          isExpanded: true,
+                          dropdownColor: Colors.white,
+                          value: searchMethod,
+                          items: Proses.listMethod
+                              .map((e) => DropdownMenuItem<String>(
+                                    child: Text(e),
+                                    value: e,
+                                  ))
+                              .toList(),
+                          onChanged: (value) {
+                            setState(() {
+                              searchMethod = value;
+                              
+                            });
+                          }),
+                    )
+                    );
+
 }
 
+void filterMethod() {
+  print(searchMethod);
+    var initialList = _prosess;
+    if(onSearch){
+      initialList = _filterProses;
+    }
+    switch (searchMethod) {
+      case 'Pengadaan Langsung':
+        _filterProses = initialList
+            .where((element) => element.metodePengadaan
+                .toLowerCase()
+                .trim()
+                .contains('Pengadaan Langsung'.toLowerCase()))
+            .toList();
+        break;
+      case 'Penunjukan Langsung':
+        _filterProses = initialList
+            .where((element) => element.metodePengadaan
+                .toLowerCase()
+                .trim()
+                .contains('Penunjukan Langsung'.toLowerCase()))
+            .toList();
+        break;
+      case 'Tender Cepat':
+        _filterProses = initialList
+            .where((element) => element.metodePengadaan
+                .toLowerCase()
+                .trim()
+                .contains('Tender Cepat'.toLowerCase()))
+            .toList();
+        break;
+      case 'Tender':
+        _filterProses = initialList
+            .where((element) =>
+                element.metodePengadaan.toLowerCase().trim() ==
+                ('Tender'.toLowerCase())
+                )
+            .toList();
+        break;
+      default:
+        _filterProses = initialList;
+    }
+  }
   @override
   Widget build(BuildContext context) {
-    
+    filterMethod();
        return Scaffold(
         key: _scaffoldKey,
         appBar: AppBar(
           title: Text(_titleProgress),
           actions: <Widget>[
-            IconButton(
-                icon: Icon(Icons.add),
-                onPressed: () {
-                  _createProses();
-                }),
                 IconButton(
                 icon: Icon(Icons.refresh),
                 onPressed: () {
@@ -473,56 +504,57 @@ searchField(){
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget> [
+              // Padding(
+              //   padding: EdgeInsets.all(10.0),
+              //   child: TextField(
+              //     controller: _namaUnitController,
+              //     decoration: InputDecoration.collapsed(hintText: 'Nama Unit',
+
+              //     ),
+              //   ),
+              // ),
+              // Padding(
+              //   padding: EdgeInsets.all(10.0),
+              //   child: TextField(
+              //     controller: _namaPengadaanController,
+              //     decoration: InputDecoration.collapsed(hintText: 'Nama Pengadaan',
+
+              //     ),
+              //   ),
+              // ),
               Padding(
-                padding: EdgeInsets.all(20.0),
+                padding: EdgeInsets.all(10.0),
                 child: TextField(
-                  controller: _namaPengadaanController,
-                  decoration: InputDecoration.collapsed(hintText: 'Nama Pengadaan',
+                  controller: _namaPenyediaController,
+                  decoration: InputDecoration.collapsed(hintText: 'Nama Penyedia',
 
                   ),
                 ),
               ),
-              // Padding(
-              //   padding: EdgeInsets.all(20.0),
-              //   child: TextField(
-              //     controller: _namaPenyediaController,
-              //     decoration: InputDecoration.collapsed(hintText: 'Nama Penyedia',
-
-              //     ),
-              //   ),
-              // ),
-              // Padding(
-              //   padding: EdgeInsets.all(20.0),
-              //   child: TextField(
-              //     controller: _metodePengadaanController,
-              //     decoration: InputDecoration.collapsed(hintText: 'Metode Pengadaan',
-
-              //     ),
-              //   ),
-              // ),
+  
               
               
-              DropdownButtonHideUnderline(
-                      child: DropdownButton(
-                        hint: Text("      Metode"),
-                          isExpanded: true,
-                          dropdownColor: Colors.white,
-                          value: selectedMethod,
-                          items: Proses.listMethod
-                              .map((e) => DropdownMenuItem<String>(
-                                    child: Text(e),
-                                    value: e,
-                                  ))
-                              .toList(),
-                          onChanged: (value) {
-                            setState(() {
-                              selectedMethod = value;
+              // DropdownButtonHideUnderline(
+              //         child: DropdownButton(
+              //           hint: Text("      Metode"),
+              //             isExpanded: true,
+              //             dropdownColor: Colors.white,
+              //             value: selectedMethod,
+              //             items: Proses.listMethod
+              //                 .map((e) => DropdownMenuItem<String>(
+              //                       child: Text(e),
+              //                       value: e,
+              //                     ))
+              //                 .toList(),
+              //             onChanged: (value) {
+              //               setState(() {
+              //                 selectedMethod = value;
                               
-                            });
-                          }),
-                    ),
+              //               });
+              //             }),
+              //       ),
               // Padding(
-              //   padding: EdgeInsets.all(20.0),
+              //   padding: EdgeInsets.all(10.0),
               //   child: TextField(
               //     controller: _paguPengadaanController,
               //     keyboardType: TextInputType.number,
@@ -531,26 +563,37 @@ searchField(){
               //     ),
               //   ),
               // ),
-               Padding(
-                padding: EdgeInsets.all(20.0),
-                child: TextField(
-                  controller: _hpsPengadaanController,
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration.collapsed(hintText: 'HPS',
+              //  Padding(
+              //   padding: EdgeInsets.all(10.0),
+              //   child: TextField(
+              //     controller: _hpsPengadaanController,
+              //     keyboardType: TextInputType.number,
+              //     decoration: InputDecoration.collapsed(hintText: 'HPS',
 
-                  ),
-                ),
-              ),
-              DateDropDown(
+              //     ),
+              //   ),
+              // ),
+              // Padding(
+              //   padding: EdgeInsets.all(10.0),
+              //   child: TextField(
+              //     controller: _nilaiKontrakController,
+              //     keyboardType: TextInputType.number,
+              //     decoration: InputDecoration.collapsed(hintText: 'Nilai Kontrak',
+
+              //     ),
+              //   ),
+              // ),
+            Padding(padding: EdgeInsets.all(10.0),
+             child: DateDropDown(
               labelText: labelText,
               valueText: new DateFormat.yMd().format(tgl),
               valueStyle: valueStyle,
               onPressed: () {
                 _selectedDate(context);
               },
-            ),
+            ),),
               Padding(
-                padding: EdgeInsets.all(20.0),
+                padding: EdgeInsets.all(10.0),
                 child: TextField(
                   controller: _usulanStatusController,
                   // keyboardType: TextInputType.number,
@@ -583,6 +626,7 @@ searchField(){
               ],
               )
               :Container(),
+              searchedMethod(),
               searchField(),
               Expanded(child: 
               _databody(),
@@ -592,12 +636,7 @@ searchField(){
             
           ),
         ),
-          floatingActionButton: FloatingActionButton(
-            onPressed: (){
-              _addProsesDp();
-          } ,
-          child: Icon(Icons.add),
-          ),
+         
         );
   }
 }

@@ -81,8 +81,8 @@ class UsulanTile extends StatelessWidget {
                       alignment : Alignment.centerRight,
                       child:TextButton(
                       onPressed:(){ ItemService().deleteProps(id: item.id);},
-                      child: const Text("Delete",
-                      style: TextStyle(fontSize: 13,color: Colors.red
+                      child: const Text("Finish",
+                      style: TextStyle(fontSize: 14,color: Colors.red
                       ))
                     )
                     )], )

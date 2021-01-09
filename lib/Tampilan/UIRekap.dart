@@ -1,44 +1,34 @@
-// import 'dart:developer';
-
 import 'package:Monitoring/Model/rekap.dart';
 import 'package:Monitoring/Model/ServiceRekap.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:Monitoring/Tampilan/monitoringrekap.dart';
+import 'package:Monitoring/Tampilan/tambarhRekap.dart';
 
-
-class MonRekap extends StatefulWidget {
-MonRekap():super();
-final String title = 'Monitoring Rekap';
-
+class UIRekap extends StatefulWidget {
+  UIRekap():super();
+  final String title = 'Rekap Pengadaan';
   @override
-  _MonRekapState createState() => _MonRekapState();
+  _UIRekapState createState() => _UIRekapState();
 }
+  // List<DropdownMenuItem> dropDownMenu(Map input) {
+  //   List<DropdownMenuItem> output = [];
+  //   input.forEach((key, value) {
+  //     output.add(DropdownMenuItem<int>(
+  //       child: Text(value),
+  //       value: key,
+  //     ));
+  //   });
+  //   return output;
+  // }
 
-class _MonRekapState extends State<MonRekap> {
-  List<Rekap> _rekaps;
+class _UIRekapState extends State<UIRekap> {
+List<Rekap> _rekaps;
   List<Rekap> _filterRekap;
   GlobalKey<ScaffoldState> _scaffoldKey;
-  TextEditingController _namaPengadaansController;
-  TextEditingController _totalRekapController;
-  Rekap _selectedRekap;
-  bool _isUpdating;
-  String _titleProgress;
+ String _titleProgress;
   bool onSearch = false;
-  // String searchedYear;
-  var selectedYear;
-  var searchYear ;
-
-// List<DropdownMenuItem> dropDownMenu(Map input) {
-//     List<DropdownMenuItem> output = [];
-//     input.forEach((key, value) {
-//       output.add(DropdownMenuItem<int>(
-//         child: Text(value),
-//         value: key,
-//       ));
-//     });
-//     return output;
-//   }
-
+  var searchYear;
 
   @override
   void initState() {
@@ -46,22 +36,14 @@ class _MonRekapState extends State<MonRekap> {
     _getRekap();
     _rekaps = [];
     _filterRekap = [];
-    _isUpdating = false;
     _titleProgress = widget.title;
     _scaffoldKey = GlobalKey();
-    _namaPengadaansController = TextEditingController();
-    _totalRekapController = TextEditingController();
   }
-  // _showSnackBar(context,message){
-  //   _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text(message),),);
-
-  // }
-  _showProgress(String message){
+_showProgress(String message){
     setState(() {
       _titleProgress = message;
     });
   }
-
   _createRekap() {
     _showProgress('Creating Table...');
     ServiceRekap.createTable().then((result){
@@ -71,13 +53,12 @@ class _MonRekapState extends State<MonRekap> {
       }
     });
   }
- _showSnackBar(context, message) {
+  _showSnackBar(context, message) {
     _scaffoldKey.currentState.showSnackBar(SnackBar(
       content: Text("Ditambahkan"),
     ));
   }
-  
-_getRekap() {
+  _getRekap() {
   _showProgress('Loading Rekap...');
     ServiceRekap.getRekap().then((rekaps) {
       setState(() {
@@ -87,53 +68,7 @@ _getRekap() {
       print("Length: ${rekaps.length}");
     });
   }
-
-
-
-  _updateRekap(Rekap rekap) {
-    _showProgress('Updating Ekatalog...');
-    ServiceRekap.updateRekap(
-            rekap.id,selectedYear, _namaPengadaansController.text,  _totalRekapController.text) 
-        .then((result) {
-      if ('success' == result) {
-        setState(() {
-          _isUpdating = false;
-        });
-       _namaPengadaansController.text = '';
-        _totalRekapController.text = '';
-
-
-      }
-    });
-
-  }
-  _deleteRekap(Rekap rekap) {
-    _showProgress('Deleting Employee...');
-    ServiceRekap.deleteRekap(rekap.id).then((result) {
-      if ('success' == result) {
-        setState(() {
-          _rekaps.remove(rekap);
-        });
-        _getRekap();
-      }
-    });
-  }
-   _showValues(Rekap rekap) {
-     selectedYear = rekap.tahun;
-    _namaPengadaansController.text = rekap.namaPengadaans;
-    _totalRekapController.text = rekap.totalPengadaan; 
-    setState(() {
-      _isUpdating = true;
-    });
-  }
-
-  _clearValue(){
-    _namaPengadaansController.text = '';
-    _totalRekapController.text = '';
-  }
-
-
-SingleChildScrollView _databody(){
+  SingleChildScrollView _databody(){
   _filterRekap.forEach((Rekap e) { 
       print(e.id);
       print(e.namaPengadaans);
@@ -155,36 +90,22 @@ SingleChildScrollView _databody(){
           label: Text('Total Rekap'),
         
         ),
-         DataColumn(
-          label: Text('Hapus'),
-        
-        ),
+     
       ],
-      rows: _rekaps
+      rows: _filterRekap
       .map(
         (rekap) => DataRow(cells: [
  
             DataCell(
-            Text(rekap.namaPengadaans.toUpperCase()),
-            onTap: (){
-              _showValues(rekap);
-              _selectedRekap = rekap;
-            }
+            Text(rekap.namaPengadaans.toString()),
+            
             ),
             DataCell(
             Text(NumberFormat.currency(locale: 'id', symbol: 'Rp ').format(int.parse(rekap.totalPengadaan)),
               ),
-            onTap: (){
-              _showValues(rekap);
-              _selectedRekap = rekap;
 
-            }
             ),
-            DataCell(IconButton(icon: Icon(Icons.delete),
-            onPressed: (){
-              _deleteRekap(rekap);
-            },
-            ))
+            
         ]
 
       )).toList(),
@@ -195,7 +116,6 @@ SingleChildScrollView _databody(){
   );
 
 }
-
 Widget searchedYear(){
 return
 Padding( padding : EdgeInsets.all(20.0),
@@ -267,10 +187,10 @@ void filterYear() {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
-       return Scaffold(
+    filterYear();
+    return Scaffold(
         key: _scaffoldKey,
         appBar: AppBar(
           title: Text(_titleProgress),
@@ -287,67 +207,41 @@ void filterYear() {
                 }),
           ],
         ),
-        body: Container(
+        body:Container(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget> [
-              Padding(
-                padding: EdgeInsets.all(20.0),
-                child: TextField(
-                  controller: _namaPengadaansController,
-                  decoration: InputDecoration.collapsed(hintText: 'Nama Pengadaan',
-
-                  ),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.all(20.0),
-                child: TextField(
-                  controller: _totalRekapController,
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration.collapsed(hintText: 'Total Rekap',
-
-                  ),
-                ),
-              ),
-
-              _isUpdating? 
-              Row(children: <Widget>[
-                OutlineButton(
-                  child: Text('Update'),
-                  onPressed: (){
-                    _updateRekap(_selectedRekap);
-                  },
-                  ),
-                  OutlineButton(
-                    child: Text('Cancel'),
-                    onPressed: (){
-                      setState((){
-                        _isUpdating = false;
-                      });
-                      _clearValue();
-                  },
-                  )
-              ],
-              )
-              :Container(),
-              searchedYear(),
+            children : [
+            searchedYear(),
+              
               Expanded(child: 
+              _databody()),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+              children : [
+                RaisedButton(
+                  color: Colors.greenAccent,
+                  child: Text("Tambah Rekap"),
+                  onPressed: (){
+                    Navigator.push(context, MaterialPageRoute(
+                      builder: (context) => TambahRekap()));
+            
+                  },)
+                  ,
+                  SizedBox(
+          width: 10,
+        )
+                  ,  RaisedButton(
+                  color: Colors.blueAccent,
+                  child: Text("Update Pengadaan"),
+                  onPressed: (){
+                    Navigator.push(context, MaterialPageRoute(
+                      builder: (context) => MonRekap()));
+            
+                  },)
+                  ]
+            )
               
-              _databody(),
-              ),
-              
-              
-            ],
+        ])
           ),
-        ),
-          // floatingActionButton: FloatingActionButton(
-          //   onPressed: (){
-          //     _addRekap();
-          // } ,
-          // child: Icon(Icons.add),
-          // ),
         );
   }
 }
-

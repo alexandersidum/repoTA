@@ -2,13 +2,14 @@ class Ekatalog {
 
   String id;
   String namaUnit;
+  String tanggal;
   String jumlahTransaksi;
   
 //monitoring pengadaan
 
+  static  List<String> listYear =  ['2018', '2019', '2020', '2021'];
 
-
-  Ekatalog({this.id, this.namaUnit, this.jumlahTransaksi});
+  Ekatalog({this.id, this.namaUnit,this.tanggal, this.jumlahTransaksi});
 
 
   factory Ekatalog.fromJson(Map<String, dynamic> json){
@@ -16,6 +17,7 @@ class Ekatalog {
       Ekatalog(
         id: json['id'] as String,
         namaUnit: json['nama_unit'] ,
+        tanggal: json['tanggal'] ,
         jumlahTransaksi: json['jumlah_transaksi'],
       ));
 

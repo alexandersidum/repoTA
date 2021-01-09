@@ -54,11 +54,12 @@ static List<Ekatalog> parseResponse(String responseBody) {
   return parsed.map<Ekatalog>((json) =>Ekatalog.fromJson(json)).toList();
 }
 
-static Future<String> addEkatalog(String namaUnit, String jumlahTransaksi) async{
+static Future<String> addEkatalog(String namaUnit, String tanggal, String jumlahTransaksi) async{
    try{
     var map = Map<String, dynamic>();
     map['action'] = _ADD_CAT_ACTION;
     map['nama_unit'] = namaUnit;
+    map['tanggal'] = tanggal;
     map['jumlah_transaksi'] = jumlahTransaksi;
     final response = await http.post(ROOT, body:map);
     print("berhasil");
@@ -73,12 +74,13 @@ static Future<String> addEkatalog(String namaUnit, String jumlahTransaksi) async
     return "error";
   }
 }
-static Future<String> updateEkatalog(String catId, String namaUnit, String jumlahTransaksi ) async{
+static Future<String> updateEkatalog(String catId, String namaUnit,String tanggal, String jumlahTransaksi ) async{
   try{
     var map = Map<String,dynamic>();
     map['action'] = _UPDATE_CAT_ACTION;
     map['cat_id'] = catId;
     map['nama_unit'] = namaUnit;
+    map['tanggal'] = tanggal;
     map['jumlah_transaksi'] = jumlahTransaksi;
     final response = await http.post(ROOT, body: map);
     print("updateEkatalog Response : ${response.body}");
