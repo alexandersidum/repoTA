@@ -1,9 +1,10 @@
 //import 'dart:io';
 //import 'package:Monitoring/Tampilan/Home.dart';
+import 'package:Monitoring/Tampilan/Home.dart';
 import 'package:flutter/material.dart';
 import 'package:Monitoring/Komponen/kustom_button.dart';
 import 'package:Monitoring/Komponen/kustom_text_field.dart';
-import 'package:Monitoring/Tampilan/login.dart';
+// import 'package:Monitoring/Tampilan/login.dart';
 import 'package:provider/provider.dart';
 import 'package:Monitoring/authent.dart';
 import 'package:Monitoring/konstan.dart';
@@ -31,7 +32,7 @@ class _SignUpScreen extends State<SignUp>{
 
 
   String validationText = '';
-  var roles = ['Unit' ,'Direktorat Perencanaan', 'UKPBJ', 'PPK', 'PP', 'Pokja'];
+  var roles = ['Admin' ,'Unit' ,'Direktorat Perencanaan', 'UKPBJ', 'PPK', 'PP', 'Pokja'];
   var selectedRolesDesc;
   //var selectedRoles = null;
 
@@ -40,8 +41,8 @@ class _SignUpScreen extends State<SignUp>{
      validationText = AuthExceptionHandler.generateExceptionMessage(status);
     });
     if(status==AuthResultStatus.successful){
-      Navigator.of(context).pushNamedAndRemoveUntil(Login.routeId,(Route<dynamic> route) => false);
-      }
+      Navigator.of(context).pushNamedAndRemoveUntil(Home.routeId,(Route<dynamic> route) => false);
+      }print("go");
   }
 
   void signUp()async{
@@ -49,7 +50,7 @@ class _SignUpScreen extends State<SignUp>{
     var password = _passwordController.text.toString();
     var role = roles.indexOf(selectedRolesDesc)+1;
     var name = _nameController.text.toString();
-    Provider.of<Auth>(context, listen: false).signUp(email, password, role, name, onCompleteRegis);
+    Provider.of<Auth>(context, listen: false).createUser(email, password, role, name, onCompleteRegis);
   }
 
   List<DropdownMenuItem> dropDownMenu(Map input) {

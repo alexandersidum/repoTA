@@ -3,27 +3,31 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class Akun {
 
 
+  // ignore: missing_return
   String getRole() {
   switch(this.role){
     case 0:
       return"Akun";
       break;
     case 1:
-      return"Unit";
+      return"Admin";
       break;
     case 2:
-      return"Direktorat Perencanaan";
+      return"Unit";
       break;
     case 3:
-      return"UKPBJ";
+      return"Direktorat Perencanaan";
       break;
     case 4:
-      return"PPK";
+      return"UKPBJ";
       break;
     case 5:
-      return"Pejabat Pengadaan";
+      return"PPK";
       break;
     case 6:
+      return"Pejabat Pengadaan";
+      break;
+    case 7:
       return"Pokja";
       break;
   }
@@ -47,6 +51,22 @@ class Akun {
       uid:parsedData['uid'],
     );
   }
+}
+
+class Admin extends Akun{
+
+  Admin({String name, String email,  String registrationDate, String uid, int role})
+  :super(name: name, email: email, registrationDate: registrationDate, uid: uid, role: role);
+
+  factory Admin.fromDb(Map<String, dynamic> parsedData){
+    return Admin(
+      email: parsedData['email'],
+      name:parsedData['name'],
+      registrationDate:parsedData['registrationDate'].toString(),
+      role:parsedData['role'],
+      uid:parsedData['uid'],
+    );
+  } 
 }
 
 

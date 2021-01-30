@@ -7,7 +7,6 @@ class Ekatalog {
   
 //monitoring pengadaan
 
-  static  List<String> listYear =  ['2018', '2019', '2020', '2021'];
 
   Ekatalog({this.id, this.namaUnit,this.tanggal, this.jumlahTransaksi});
 

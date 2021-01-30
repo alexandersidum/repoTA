@@ -85,28 +85,35 @@ stateText = "FIeld Kosong";
       // if (snapshot.connectionState == ConnectionState.done) {      
         return Container(
             padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.05),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Judul Usulan',
+            child: CustomScrollView(
+            slivers: [
+              
+              SliverPadding(
+                padding: EdgeInsets.symmetric(horizontal: size.width / 16),
+                sliver: SliverList(
+                    delegate: SliverChildListDelegate([
+                     Text(
+                  'Nama Paket',
                   textAlign: TextAlign.left,
                   style: TextStyle(
                     color: Colors.blueGrey,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                TextField(
-                  controller: controllerJudul,
+                  TextField(
+                   controller: controllerJudul,
                   keyboardType: TextInputType.multiline,
                   decoration: InputDecoration(
                     border: InputBorder.none,
-                    hintText: 'Judul..',
+                    hintText: 'Nama Paket/Pengadaan',
                     filled: true,
                     fillColor: Colors.white,
                   ),
-                ),
-                Text(
+                  ),
+                  SizedBox(
+                    height: size.height / 100,
+                  ),
+                 Text(
                   'Nama Unit..',
                   textAlign: TextAlign.left,
                   style: TextStyle(
@@ -164,8 +171,11 @@ stateText = "FIeld Kosong";
                       style:
                           kMavenBold.copyWith(fontSize: size.height * 0.028)),
                 ),
-              ],
-            ));
+                ])),
+              )
+            ],
+          ),
+            );
       // }
 
       // // Kalau koneksi belum slesai

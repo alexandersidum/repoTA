@@ -166,17 +166,7 @@ class _LoginScreen extends State<Login> {
                               SizedBox(
                                 height: size.height * 0.02,
                               ),
-                              CustomRaisedButton(
-                                buttonHeight: size.height / 13,
-                                callback: () {
-                                  Navigator.pushNamed(context, SignUp.routeId);
-                                },
-                                color: kLightBlueButtonColor,
-                                buttonChild: Text("Register",
-                                    textAlign: TextAlign.center,
-                                    style: kMavenBold.copyWith(
-                                        fontSize: size.height * 0.028)),
-                              ),
+                              
                             ],
                           ),
                         ),

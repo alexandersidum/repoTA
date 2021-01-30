@@ -1,5 +1,6 @@
 import 'package:Monitoring/Tampilan/dashboard.dart';
 import 'package:Monitoring/Tampilan/usulanUI.dart';
+import 'package:Monitoring/Tampilan/usulanUIBaru.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:Monitoring/authent.dart';
@@ -29,7 +30,7 @@ List<Widget> _listPage = [
       key: PageStorageKey('dashboard'),),
     Monitoring(
       key: PageStorageKey('monitoring')),
-    UsulanUI(
+    UsulanUIBaru(
       key: PageStorageKey('usulan')),
 
   ];

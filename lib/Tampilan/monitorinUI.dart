@@ -1,9 +1,14 @@
 import 'dart:async';
+import 'package:Monitoring/Model/Akun.dart';
+import 'package:Monitoring/Model/UsulanStatus.dart';
+import 'package:Monitoring/Model/ServiceUsulan.dart';
 import 'package:Monitoring/Tampilan/monitoringTambahPengadaan.dart';
+import 'package:Monitoring/authent.dart';
 import 'package:flutter/material.dart';
 import 'package:Monitoring/Model/prosesKegiatan.dart';
 import 'package:Monitoring/Model/ServicePengadaan.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 import 'monitoringpengadaan.dart';
 
@@ -33,6 +38,7 @@ class Debouncerr{
 }
 
 class _MonitoringPUIState extends State<MonitoringPUI> {
+  List<UsulanStatus> _status;
   List<Proses> _prosess;
   List<Proses> _filterProses;
   GlobalKey<ScaffoldState> _scaffoldKey;
@@ -43,6 +49,7 @@ class _MonitoringPUIState extends State<MonitoringPUI> {
   var searchMethod;
   bool onSearch = false;
   String searchedText;
+  var searchStatus;
 
 List<DropdownMenuItem> dropDownMenu(Map input) {
     List<DropdownMenuItem> output = [];
@@ -57,8 +64,11 @@ List<DropdownMenuItem> dropDownMenu(Map input) {
 @override
   void initState() {
     super.initState();
+    var roles = Provider.of<Auth>(context,listen:false).getUserInfo.getRole();
+     listStat(roles);
     _getProses();
     _prosess = [];
+    _status = [];
     _filterProses =[];
     _titleProgress = widget.title;
     _scaffoldKey = GlobalKey(); 
@@ -96,22 +106,29 @@ List<DropdownMenuItem> dropDownMenu(Map input) {
       }
     });
   }
+  Future<void>filter()async{
+  await ServicePengadaan.getFilter(usulanStatus: searchStatus, callback : (a){
+   setState(() {
+     _filterProses = a??[];
+   });
+  });}
+  Future<void>listStat(roles)async{
+  print("atas role");
+
+print("bawah role");
+  await ServiceUsulan.getUsulan(role: roles,callback : (a){
+   setState(() {
+     _status = a??[];
+   });
+   print("dalam callback");
+  }
+
+  );
+}
 
 SingleChildScrollView _databody(){
 
 
-  _filterProses.forEach((Proses e) { 
-      print(e.id);
-      print(e.metodePengadaan);
-      print(e.namaPengadaan);
-      print(e.namaPenyedia);
-      print(e.paguPengadaan);
-      print(e.hpsPengadaan);
-      print(e.tanggalPengadaan);
-      print(e.nilaiKontrak);
-      print(e.sisaAnggaran);
-      print(e.usulanStatus);
-    });
   return SingleChildScrollView(
     scrollDirection: Axis.vertical,
     child: SingleChildScrollView(
@@ -161,14 +178,7 @@ SingleChildScrollView _databody(){
       ],
       rows: _filterProses.map(
         (proses){
- var tanggal = "";
-if(proses.tanggalPengadaan.isNotEmpty&&proses.tanggalPengadaan.trim().length>1){
-DateTime tgl = DateTime.parse(proses.tanggalPengadaan);
-tanggal =  "${tgl.day} - ${tgl.month} - ${tgl.year}";
-print(proses.tanggalPengadaan);
-}
-          
-           return DataRow(cells: [
+    return DataRow(cells: [
              DataCell(
             
             Text(proses.namaUnit.toString()
@@ -181,10 +191,12 @@ print(proses.tanggalPengadaan);
             ),
             ),
             DataCell(
-            proses.tanggalPengadaan.isNotEmpty && proses.tanggalPengadaan!=null?
-            Text(tanggal):
-            Text(""),
+            
+            Text(
+              '${proses.tanggal.toString()} - ${proses.bulan.toString()} - ${proses.tahun.toString()}'
             ),
+           
+          ),
             DataCell(
             
             Text(proses.namaPenyedia.toString()
@@ -242,34 +254,59 @@ print(proses.tanggalPengadaan);
   );
 }
 
-searchField() {
-    return Padding(
-      padding: EdgeInsets.all(20.0),
-      child: TextField(
-        decoration: InputDecoration(
-          contentPadding: EdgeInsets.all(5.0),
-          hintText: 'Filter by Status',
-        ),
-        onChanged: (string) {
-          _debouncer.run(() {
+// searchField() {
+//     return Padding(
+//       padding: EdgeInsets.all(20.0),
+//       child: TextField(
+//         decoration: InputDecoration(
+//           contentPadding: EdgeInsets.all(5.0),
+//           hintText: 'Filter by Status',
+//         ),
+//         onChanged: (string) {
+//           _debouncer.run(() {
             
-            searchedText = string;
-            if (string != null || string != '') {
-              onSearch = true;
-              _filterProses = _prosess
-                .where((u) => (u.usulanStatus
-                    .toLowerCase()
-                    .contains(string.toLowerCase())))
-                .toList();
-            }else{
-              onSearch = false;
-            }
-            setState(() {});
-          });
-        },
-      ),
-    );
-  }
+//             searchedText = string;
+//             if (string != null || string != '') {
+//               onSearch = true;
+//               _filterProses = _prosess
+//                 .where((u) => (u.usulanStatus
+//                     .toLowerCase()
+//                     .contains(string.toLowerCase())))
+//                 .toList();
+//             }else{
+//               onSearch = false;
+//             }
+//             setState(() {});
+//           });
+//         },
+//       ),
+//     );
+//   }
+Widget searchFilter(){
+return Padding( padding : EdgeInsets.all(10.0),
+
+child: DropdownButtonHideUnderline(
+                      child: DropdownButton(
+                        hint: Text("Filter Metode"),
+                          isExpanded: true,
+                          dropdownColor: Colors.white,
+                          value: searchStatus,
+                          items: _status
+                              .map((e) => DropdownMenuItem<String>(
+                                    child: Text(e.usulanStatus),
+                                    value: e.usulanStatus,
+                                  ))
+                              .toList(),
+                          onChanged: (value) {
+                            setState(() {
+                              searchStatus = value;
+                              filter();
+                            });
+                          }),
+                    )
+                    );
+
+}
 Widget searchedMethod(){
 return Padding( padding : EdgeInsets.all(20.0),
 
@@ -340,8 +377,10 @@ void filterMethod() {
 
   @override
   Widget build(BuildContext context) {
-    
+  Akun account = Provider.of<Auth>(context).getUserInfo;
+    int role = Provider.of<Auth>(context).getUserInfo.role;  
       filterMethod();
+  if (account.role == 1) {
        return Scaffold(
         key: _scaffoldKey,
         appBar: AppBar(
@@ -362,10 +401,35 @@ void filterMethod() {
           ]
           ),
           body:Container(
-          child: Column(
+          child: roleMenuList(role, context, account),
+          ),        
+          );
+          }else{
+            return Scaffold(
+        key: _scaffoldKey,
+        appBar: AppBar(
+          title: Text(_titleProgress),
+          actions: <Widget>[
+                IconButton(
+                icon: Icon(Icons.refresh),
+                onPressed: () {
+                  _getProses();
+                }),
+          ]
+          ),
+          body:Container(
+          child: roleMenuList(role, context, account),
+          ),        
+          );
+          }        
+  }
+Widget roleMenuList(int role, BuildContext context, Akun account) {
+  switch (role) {
+      case 0:
+        return Column(
             children : [
             searchedMethod(),
-              searchField(),
+              // searchField(),
               Expanded(child: 
               _databody()),
               Row(
@@ -394,13 +458,210 @@ void filterMethod() {
                   ]
             )
               
-        ])
-          ),
-           
+        ]);
+        break;
+      case 1:
+        return Column(
+            children : [
+            searchedMethod(),
+            searchFilter(),
+              // searchField(),
+              Expanded(child: 
+              _databody()),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+              children : [
+                RaisedButton(
+                  color: Colors.greenAccent,
+                  child: Text("Tambah Pengadaan"),
+                  onPressed: (){
+                    Navigator.push(context, MaterialPageRoute(
+                      builder: (context) => MonAddPengadaan()));            
+                  },)
+                  ,
+                  SizedBox(
+          width: 10,
+        )
+                  ,  RaisedButton(
+                  color: Colors.blueAccent,
+                  child: Text("Update Pengadaan"),
+                  onPressed: (){
+                    Navigator.push(context, MaterialPageRoute(
+                      builder: (context) => MonPengadaan()));
             
-         
-          );
-          
-          
+                  },)
+                  ]
+            )
+              
+        ]);
+        break;
+      case 2:
+        return Column(
+            children : [
+            searchedMethod(),
+              // searchField(),
+              searchFilter(),
+              Expanded(child: 
+              _databody()),]);
+        break;
+      case 3:
+        return Column(
+            children : [
+            searchedMethod(),
+            searchFilter(),
+              // searchField(),
+              Expanded(child: 
+              _databody()),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+              children : [
+                RaisedButton(
+                  color: Colors.blueAccent,
+                  child: Text("Update Pengadaan"),
+                  onPressed: (){
+                    Navigator.push(context, MaterialPageRoute(
+                      builder: (context) => MonPengadaan()));
+            
+                  },)
+                  ]
+            )      
+        ]
+        )
+        ;
+        break;
+      case 4:
+        return Column(
+            children : [
+            searchedMethod(),
+              // searchField(),
+              searchFilter(),
+              Expanded(child: 
+              _databody()),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+              children : [
+                RaisedButton(
+                  color: Colors.blueAccent,
+                  child: Text("Update Pengadaan"),
+                  onPressed: (){
+                    Navigator.push(context, MaterialPageRoute(
+                      builder: (context) => MonPengadaan()));
+            
+                  },)
+                  ]
+            )      
+        ]
+        );
+        break;
+      case 5:
+        return Column(
+            children : [
+            searchedMethod(),
+              // searchField(),
+              searchFilter(),
+              Expanded(child: 
+              _databody()),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+              children : [
+                
+                RaisedButton(
+                  color: Colors.blueAccent,
+                  child: Text("Update Pengadaan"),
+                  onPressed: (){
+                    Navigator.push(context, MaterialPageRoute(
+                      builder: (context) => MonPengadaan()));
+            
+                  },)
+                  ]
+            )      
+        ]
+        );
+        break;
+      case 6:
+        return Column(
+            children : [
+            searchedMethod(),
+              // searchField(),
+              searchFilter(),
+              Expanded(child: 
+              _databody()),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+              children : [
+                RaisedButton(
+                  color: Colors.blueAccent,
+                  child: Text("Update Pengadaan"),
+                  onPressed: (){
+                    Navigator.push(context, MaterialPageRoute(
+                      builder: (context) => MonPengadaan()));
+            
+                  },)
+                  ]
+            )      
+        ]
+        );
+        break;
+      case 7:
+        return Column(
+            children : [
+            searchedMethod(),
+              // searchField(),
+              searchFilter(),
+              Expanded(child: 
+              _databody()),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+              children : [
+                RaisedButton(
+                  color: Colors.blueAccent,
+                  child: Text("Update Pengadaan"),
+                  onPressed: (){
+                    Navigator.push(context, MaterialPageRoute(
+                      builder: (context) => MonPengadaan()));
+            
+                  },)
+                  ]
+            )      
+        ]
+        );
+        break;
+      default:
+        return Column(
+            children : [
+            searchedMethod(),
+              // searchField(),
+              searchFilter(),
+              Expanded(child: 
+              _databody()),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+              children : [
+                RaisedButton(
+                  color: Colors.greenAccent,
+                  child: Text("Tambah Pengadaan"),
+                  onPressed: (){
+                    Navigator.push(context, MaterialPageRoute(
+                      builder: (context) => MonAddPengadaan()));
+            
+                  },)
+                  ,
+                  SizedBox(
+          width: 10,
+        )
+                  ,  RaisedButton(
+                  color: Colors.blueAccent,
+                  child: Text("Update Pengadaan"),
+                  onPressed: (){
+                    Navigator.push(context, MaterialPageRoute(
+                      builder: (context) => MonPengadaan()));
+            
+                  },)
+                  ]
+            )
+              
+        ]);
+    }
   }
 }
+

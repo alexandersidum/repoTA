@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:Monitoring/Model/Akun.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:path/path.dart' as p;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -34,14 +35,57 @@ class Auth with ChangeNotifier {
   }
 
 
-  void signUp(String _email, String _password, int role, String name, Function onComplete) async{
-   //ExceptionHandlingnya masih ga work
-     try {
-      await _auth
-          .createUserWithEmailAndPassword(email: _email, password: _password)
+  // void signUp(String _email, String _password, int role, String name, Function onComplete) async{
+  //  //ExceptionHandlingnya masih ga work
+  //    try {
+  //     await _auth
+  //         .createUserWithEmailAndPassword(email: _email, password: _password)
+  //         .then((result) async {
+  //     if (result.user != null){
+  //     _firestore.collection('users').doc(result.user.uid).set(
+  //       {'uid': result.user.uid,
+  //        'registrationDate': FieldValue.serverTimestamp(),
+  //        'email':result.user.email,
+  //        'name' : name,
+  //        'role' : role,
+  //       }
+  //     ).then((value) => onComplete(AuthResultStatus.successful));
+  //   }}
+  //   );
+  //   }catch (error) {
+  //     onComplete(AuthExceptionHandler.handleException(error));
+  //   }
+    
+
+  //   // catch(error){
+  //   //   switch(error){
+  //   //     case "ERROR_EMAIL_ALREADY_IN_USE":
+  //   //     {
+  //   //       //yang dilakukan apa?
+  //   //       onComplete('ERROR_EMAIL_ALREADY_IN_USE');
+  //   //       break;
+  //   //     }
+  //   //     case "ERROR_WEAK_PASSWORD":
+  //   //     {
+  //   //       //yang dilakukan
+  //   //       break;
+  //   //     }
+  //   //     //Case lainnya
+  //   //   }
+
+  //   // }
+    
+  // }
+  void createUser(String email, String password, int role, String name, Function onComplete)async{
+    FirebaseApp app2 = await Firebase.initializeApp(
+        name: 'aiuth2',  options: Firebase.app().options);
+      try {
+     await FirebaseAuth.instanceFor(app: app2)
+        .createUserWithEmailAndPassword(email: email, password: password)
           .then((result) async {
       if (result.user != null){
-      _firestore.collection('users').doc(result.user.uid).set(
+        print("berhasil");
+     await _firestore.collection('users').doc(result.user.uid).set(
         {'uid': result.user.uid,
          'registrationDate': FieldValue.serverTimestamp(),
          'email':result.user.email,
@@ -49,32 +93,14 @@ class Auth with ChangeNotifier {
          'role' : role,
         }
       ).then((value) => onComplete(AuthResultStatus.successful));
-    }}
+      }  
+    }
     );
     }catch (error) {
       onComplete(AuthExceptionHandler.handleException(error));
-    }
-    
-
-    // catch(error){
-    //   switch(error){
-    //     case "ERROR_EMAIL_ALREADY_IN_USE":
-    //     {
-    //       //yang dilakukan apa?
-    //       onComplete('ERROR_EMAIL_ALREADY_IN_USE');
-    //       break;
-    //     }
-    //     case "ERROR_WEAK_PASSWORD":
-    //     {
-    //       //yang dilakukan
-    //       break;
-    //     }
-    //     //Case lainnya
-    //   }
-
-    // }
-    
-  }
+    }   
+    app2.delete();
+}
 
   Future<void> signIn(
       String email, String password, Function onComplete) async {
@@ -109,21 +135,24 @@ Future<Akun> checkUserInfo(uid) async{
             _userInfo = Akun.fromDb(value.data());
             break;
           case 1:
+            _userInfo = Admin.fromDb(value.data());
+            break;  
+          case 2:
             _userInfo = Unit.fromDb(value.data());
             break;
-          case 2:
+          case 3:
             _userInfo = Dp.fromDb(value.data());
             break;
-          case 3:
+          case 4:
             _userInfo = UKPBJ.fromDb(value.data()); 
             break;
-          case 4:
+          case 5:
             _userInfo = PPK.fromDb(value.data());
             break;
-          case 5:
+          case 6:
             _userInfo = PP.fromDb(value.data()); 
             break;
-            case 5:
+          case 7:
             _userInfo = Pokja.fromDb(value.data()); 
             break;
              
