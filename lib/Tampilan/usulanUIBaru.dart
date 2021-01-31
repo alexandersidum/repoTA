@@ -13,7 +13,7 @@ import 'monitoringpengadaan.dart';
 
 class UsulanUIBaru extends StatefulWidget {
 UsulanUIBaru({Key key}) : super(key: key);
-final String title = 'Monitoring Pengadaan';
+final String title = 'Usulan Unit';
 
   @override
   _UsulanUIBaruState createState() => _UsulanUIBaruState();
