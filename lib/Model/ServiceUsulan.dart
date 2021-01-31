@@ -5,7 +5,7 @@ import 'package:http/http.dart'
 // import 'UsulanStatus.dart';
 
 class ServiceUsulan{
-  static const ROOT = 'http://192.168.100.170/EkatalogDB/usulan_action.php';
+  static const ROOT = 'http://monitoringpengadaam.000webhostapp.com/EkatalogDB/usulan_action.php';
   static const _CREATE_TABLE_ACTION = 'CREATE_TABLE';
   static const _GET_STAT = 'GET_STAT';
   static const _ADD_STAT = 'ADD_STAT';

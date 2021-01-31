@@ -298,7 +298,12 @@ child: DropdownButtonHideUnderline(
                                   ))
                               .toList(),
                           onChanged: (value) {
+                            //   if(searchStatus!=value)
+                            // {
+                            //   _filterProses=_prosess;
+                            // }
                             setState(() {
+                            
                               searchStatus = value;
                               filter();
                             });
@@ -323,9 +328,13 @@ child: DropdownButtonHideUnderline(
                                   ))
                               .toList(),
                           onChanged: (value) {
+                              if(searchMethod!=value)
+                            {
+                              _filterProses=_prosess;
+                            }
                             setState(() {
                               searchMethod = value;
-                              
+                              filter();
                             });
                           }),
                     ));
@@ -335,7 +344,7 @@ child: DropdownButtonHideUnderline(
 void filterMethod() {
   print(searchMethod);
     var initialList = _prosess;
-    if(onSearch){
+   if(onSearch||searchStatus!=null){
       initialList = _filterProses;
     }
     switch (searchMethod) {

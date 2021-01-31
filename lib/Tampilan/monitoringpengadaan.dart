@@ -55,7 +55,7 @@ class _MonPengadaanState extends State<MonPengadaan> {
   TextEditingController _hpsPengadaanController;
   TextEditingController _usulanStatusController;
   TextEditingController volumeController;
-  TextEditingController sumberDanaController;
+  var sumberDanaController;
 
   var pemilihanAwal;
   var pemilihanAkhir;
@@ -108,7 +108,7 @@ class _MonPengadaanState extends State<MonPengadaan> {
     _nilaiKontrakController = TextEditingController();
     _usulanStatusController = TextEditingController();
     volumeController = TextEditingController();
-    sumberDanaController = TextEditingController();
+    
     // pemilihanAwalController = TextEditingController();
     // pemilihanAkhirController = TextEditingController();
     // pekerjaanAwalController = TextEditingController();
@@ -192,7 +192,7 @@ Future<void>filter()async{
       sisaAnggaran = int.parse(proses.paguPengadaan) - int.parse(_nilaiKontrakController.text);
     }
     await ServicePengadaan.updateProsesPPK(
-            proses.id, selectedUnit, _namaPengadaanController.text, selectedJenisPengadaan , selectedDay,  selectedMonth, selectedYears ,volumeController.text , sumberDanaController.text, pemilihanAwal , pemilihanAkhir , pekerjaanAwal, pekerjaanAkhir, _namaPenyediaController.text,  selectedMethod, _paguPengadaanController.text, _hpsPengadaanController.text, _nilaiKontrakController.text, sisaAnggaran.toString(), selectedStatus) 
+            proses.id, selectedUnit, _namaPengadaanController.text, selectedJenisPengadaan , selectedDay,  selectedMonth, selectedYears ,volumeController.text , sumberDanaController, pemilihanAwal , pemilihanAkhir , pekerjaanAwal, pekerjaanAkhir, _namaPenyediaController.text,  selectedMethod, _paguPengadaanController.text, _hpsPengadaanController.text, _nilaiKontrakController.text, sisaAnggaran.toString(), selectedStatus) 
         .then((result) {
       if ('success' == result) {
         _showSnackBar(context, result);
@@ -202,7 +202,7 @@ Future<void>filter()async{
         });
          _paguPengadaanController.text = '';
         _hpsPengadaanController.text = '';  
-        _usulanStatusController.text = '';
+        
       }
     });
 
@@ -227,7 +227,7 @@ Future<void>filter()async{
     _namaPenyediaController.text = proses.namaPenyedia;
     selectedMethod = proses.metodePengadaan;
     volumeController.text = proses.volume;
-    sumberDanaController.text = proses.sumberDana;
+    sumberDanaController = proses.sumberDana;
     selectedDay = proses.tanggal;
     selectedMonth = proses.bulan;
     selectedYears = proses.tahun;
@@ -253,7 +253,7 @@ Future<void>filter()async{
     _namaPenyediaController.text = proses.namaPenyedia;
     selectedMethod = proses.metodePengadaan;
     volumeController.text = proses.volume;
-    sumberDanaController.text = proses.sumberDana;
+    sumberDanaController = proses.sumberDana;
 
     
     pemilihanAwal = proses.pemilihanAwal;
@@ -263,19 +263,19 @@ Future<void>filter()async{
     _paguPengadaanController.text = proses.paguPengadaan;
     _hpsPengadaanController.text = proses.hpsPengadaan;
     _nilaiKontrakController.text = proses.nilaiKontrak;
-    _usulanStatusController.text = proses.usulanStatus;
+    
     setState(() {
       _isUpdating = true;
     });
   }
   _showValuesDp(Proses proses) {//memunculkan value yang nantinya ditunjukkan
-   selectedUnit = proses.namaUnit;
+    selectedUnit = proses.namaUnit;
     _namaPengadaanController.text = proses.namaPengadaan;
     // selectedJenisPengadaan = proses.jenisPengadaan;
     _namaPenyediaController.text = proses.namaPenyedia;
     selectedMethod = proses.metodePengadaan;
     volumeController.text = proses.volume;
-    sumberDanaController.text = proses.sumberDana;
+    sumberDanaController = proses.sumberDana;
     // tgl = DateTime.parse((proses.tanggalPengadaan));
     pemilihanAwal = proses.pemilihanAwal;
     pemilihanAkhir = proses.pemilihanAkhir;
@@ -458,13 +458,13 @@ if (account.role == 1) {
                           )
                         ,//erorr
             onTap: (){
-              _showValues(proses);
+              // _showValues(proses);
               _selectedProses = proses;
             }),
             DataCell(
             Text(proses.usulanStatus.toString()),
             onTap: (){
-              _showValues(proses);
+              // _showValues(proses);
               _selectedProses = proses;
             }),
             DataCell(IconButton(icon: Icon(Icons.delete),
@@ -626,13 +626,13 @@ if (account.role == 1) {
                           )
                         ,//erorr
             onTap: (){
-              _showValues(proses);
+              // _showValues(proses);
               _selectedProses = proses;
             }),
             DataCell(
             Text(proses.usulanStatus.toString()),
             onTap: (){
-              _showValues(proses);
+              // _showValues(proses);
               _selectedProses = proses;
             }),
 
@@ -790,13 +790,13 @@ if (account.role == 1) {
                           )
                         ,//erorr
             onTap: (){
-              _showValuesPPK(proses);
+              // _showValuesPPK(proses);
               _selectedProses = proses;
             }),
             DataCell(
             Text(proses.usulanStatus.toString()),
             onTap: (){
-              _showValuesPPK(proses);
+              // _showValuesPPK(proses);
               _selectedProses = proses;
             }),
 
@@ -955,13 +955,13 @@ if (account.role == 1) {
                           )
                         ,//erorr
             onTap: (){
-              _showValuesPPK(proses);
+              // _showValuesPPK(proses);
               _selectedProses = proses;
             }),
             DataCell(
             Text(proses.usulanStatus.toString()),
             onTap: (){
-              _showValuesPPK(proses);
+              // _showValuesPPK(proses);
               _selectedProses = proses;
             }),
 
@@ -1130,13 +1130,13 @@ if (account.role == 1) {
                           )
                         ,//erorr
             onTap: (){
-              _showValues(proses);
+              // _showValues(proses);
               _selectedProses = proses;
             }),
             DataCell(
             Text(proses.usulanStatus.toString()),
             onTap: (){
-              _showValues(proses);
+              // _showValues(proses);
               _selectedProses = proses;
             }),
 
@@ -1200,9 +1200,13 @@ child: DropdownButtonHideUnderline(
                                   ))
                               .toList(),
                           onChanged: (value) {
+                                      if(searchMethod!=value)
+                            {
+                              _filterProses=_prosess;
+                            }
                             setState(() {
                               searchMethod = value;
-                              
+                              filter();
                             });
                           }),
                     )
@@ -1210,11 +1214,13 @@ child: DropdownButtonHideUnderline(
 
 }
 Widget searchFilter(){
+  
 return Padding( padding : EdgeInsets.all(10.0),
 
 child: DropdownButtonHideUnderline(
+  
                       child: DropdownButton(
-                        hint: Text("Filter Metode"),
+                        hint: Text("Filter Status"),
                           isExpanded: true,
                           dropdownColor: Colors.white,
                           value: searchStatus,
@@ -1225,7 +1231,9 @@ child: DropdownButtonHideUnderline(
                                   ))
                               .toList(),
                           onChanged: (value) {
+                  
                             setState(() {
+                              
                               searchStatus = value;
                               filter();
                             });
@@ -1238,7 +1246,8 @@ child: DropdownButtonHideUnderline(
 void filterMethod() {
   print(searchMethod);
     var initialList = _prosess;
-    if(onSearch){
+ 
+    if(onSearch||searchStatus!=null){
       initialList = _filterProses;
     }
     switch (searchMethod) {

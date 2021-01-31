@@ -1,6 +1,8 @@
 import 'package:Monitoring/Komponen/datePicker.dart';
 import 'package:Monitoring/Model/ServiceEntryUnit.dart';
+import 'package:Monitoring/Model/ServiceSumberDana.dart';
 import 'package:Monitoring/Model/UnitEntry.dart';
+import 'package:Monitoring/Model/sumberDana.dart';
 import 'package:flutter/material.dart';
 import 'package:Monitoring/Model/prosesKegiatan.dart';
 import 'package:Monitoring/Model/ServicePengadaan.dart';
@@ -24,6 +26,7 @@ class _MonAddPengadaanState extends State<MonAddPengadaan> {
   TextEditingController _namaUnitController;
   TextEditingController _namaPengadaanController; 
   List<Unit> _units ;
+  List<SumberDana> _sumberDana ;
   
   TextEditingController _namaPenyediaController;
   // 
@@ -31,7 +34,7 @@ class _MonAddPengadaanState extends State<MonAddPengadaan> {
   TextEditingController _hpsPengadaanController;
   TextEditingController _nilaiKontrakController;
   TextEditingController _volumeController;
-  TextEditingController _sumberDanaController;
+  // TextEditingController _sumberDanaController;
   TextEditingController _sisaAnggaranController;
   TextEditingController _usulanStatusController;
   // TextEditingController _tahapController;
@@ -40,6 +43,7 @@ class _MonAddPengadaanState extends State<MonAddPengadaan> {
   var selectedMethod;
   // var selectedJenisPengadaan;
   var selectedUnit;
+  var selectedSumberDana;
 
   String pilihTanggal1,labelText1;
   DateTime tgl1 = DateTime.now();
@@ -106,13 +110,15 @@ String pilihTanggal4,labelText4;
   void initState() {
     super.initState();  
    
-    listUnit();
+   
     _titleProgress = widget.title;
     _scaffoldKey = GlobalKey();
+    listUnit();
+    listSumberDana();
     _namaUnitController = TextEditingController();
     _namaPengadaanController = TextEditingController();
     _volumeController = TextEditingController();
-    _sumberDanaController = TextEditingController();
+    // _sumberDanaController = TextEditingController();
     _namaPenyediaController = TextEditingController();
     _paguPengadaanController = TextEditingController();
     _hpsPengadaanController = TextEditingController();
@@ -126,6 +132,14 @@ Future<void> listUnit()async{
   await ServiceUnit.getUnit((List<Unit> list){
       setState(() {
           _units = list;  
+        });
+  }
+  );
+}
+Future<void> listSumberDana()async{
+  await ServiceSumberDana.getDana((List<SumberDana> list){
+      setState(() {
+          _sumberDana = list;  
         });
   }
   );
@@ -149,7 +163,6 @@ Future<void> listUnit()async{
         _namaPengadaanController.text = '';
         _paguPengadaanController.text = '';
         // _usulanStatusController.text = '';
-        _sumberDanaController.text = '';
         _volumeController.text = '';
         
   }
@@ -157,7 +170,6 @@ Future<void> listUnit()async{
        if (_namaUnitController.text.trim().isEmpty ||
           _namaPengadaanController.text.trim().isEmpty ||
            _paguPengadaanController.text.trim().isEmpty ||
-           _sumberDanaController.text.trim().isEmpty||
            _volumeController.text.trim().isEmpty
           //  _usulanStatusController.text.trim().isEmpty 
            
@@ -170,7 +182,7 @@ Future<void> listUnit()async{
     if(_paguPengadaanController.text.isNotEmpty){
       sisaAnggaran = int.parse(_paguPengadaanController.text);
     }
-     await ServicePengadaan.addProses(selectedUnit,_namaPengadaanController.text, _volumeController.text, _sumberDanaController.text, tgl1.toString(), tgl2.toString(), tgl3.toString(),tgl4.toString(), _namaPenyediaController.text, selectedMethod, _paguPengadaanController.text, _hpsPengadaanController.text, _nilaiKontrakController.text, sisaAnggaran.toString(), _usulanStatusController.text).then((result)
+     await ServicePengadaan.addProses(selectedUnit,_namaPengadaanController.text, _volumeController.text, selectedSumberDana, tgl1.toString(), tgl2.toString(), tgl3.toString(),tgl4.toString(), _namaPenyediaController.text, selectedMethod, _paguPengadaanController.text, _hpsPengadaanController.text, _nilaiKontrakController.text, sisaAnggaran.toString(), _usulanStatusController.text).then((result)
       {
          if  ('success' == result){
            }
@@ -287,12 +299,25 @@ Future<void> listUnit()async{
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                  TextField(
-                        controller: _sumberDanaController,
-                        decoration: InputDecoration.collapsed(hintText: 'Sumber Dana',
-
-                  ),
-                ),
+                   DropdownButtonHideUnderline(
+                      child: DropdownButton(
+                        hint: Text("Sumber Dana"),
+                          isExpanded: true,
+                          dropdownColor: Colors.white,
+                          value: selectedSumberDana,
+                          items: _sumberDana
+                              .map((e) => DropdownMenuItem<String>(
+                                    child: Text(e.sumberDana),
+                                    value: e.sumberDana,
+                                  ))
+                              .toList(),
+                          onChanged: (value) {
+                            setState(() {
+                              selectedSumberDana = value;
+                              
+                            });
+                          }),
+                    ),
                     SizedBox(
                     height: 10,
                   ), Text(
@@ -412,92 +437,6 @@ Future<void> listUnit()async{
               )
             ],
           ),
-
-      // child: Column(
-      //   mainAxisAlignment: MainAxisAlignment.center,
-      //   children: <Widget>[
-      //         Padding(
-      //           padding: EdgeInsets.all(10.0),
-      //           child: TextField(
-      //             controller: _namaUnitController,
-      //             decoration: InputDecoration.collapsed(hintText: 'Nama Unit',
-
-      //             ),
-      //           ),
-      //         ),
-      //         Padding(
-      //           padding: EdgeInsets.all(10.0),
-      //           child: TextField(
-      //             controller: _namaPengadaanController,
-      //             decoration: InputDecoration.collapsed(hintText: 'Nama Pengadaan',
-
-      //             ),
-      //           ),
-              // ),Padding(padding: EdgeInsets.all(10.0),
-              // child: DropdownButtonHideUnderline(
-              //         child: DropdownButton(
-              //           hint: Text("Metode"),
-              //             isExpanded: true,
-              //             dropdownColor: Colors.white,
-              //             value: selectedMethod,
-              //             items: Proses.listMethod
-              //                 .map((e) => DropdownMenuItem<String>(
-              //                       child: Text(e),
-              //                       value: e,
-              //                     ))
-              //                 .toList(),
-              //             onChanged: (value) {
-              //               setState(() {
-              //                 selectedMethod = value;
-                              
-              //               });
-              //             }),
-              //       ),
-              //       ),
-      //               Padding(padding: EdgeInsets.all(10.0),
-      //         child: DropdownButtonHideUnderline(
-      //                 child: DropdownButton(
-      //                   hint: Text("Jenis Pengadaan"),
-      //                     isExpanded: true,
-      //                     dropdownColor: Colors.white,
-      //                     value: selectedJenisPengadaan,
-      //                     items: Proses.listPengadaan
-      //                         .map((e) => DropdownMenuItem<String>(
-      //                               child: Text(e),
-      //                               value: e,
-      //                             ))
-      //                         .toList(),
-      //                     onChanged: (value) {
-      //                       setState(() {
-      //                         selectedJenisPengadaan= value;
-                              
-      //                       });
-      //                     }),
-      //               ),
-      //               ),
-      //             Padding(
-      //             padding: EdgeInsets.all(10.0),
-      //             child: TextField(
-      //             controller: _paguPengadaanController,
-      //             keyboardType: TextInputType.number,
-      //             decoration: InputDecoration.collapsed(hintText: 'Pagu',
-
-      //             ),
-      //           ),
-      //         ),
-      //         Padding(
-      //           padding: EdgeInsets.all(10.0),
-      //           child: TextField(
-      //             controller: _usulanStatusController,
-      //             decoration: InputDecoration.collapsed(hintText: 'Status',
-
-      //             ),
-      //           ),
-      //         ),
-            
-      //       )
-      //   ],
-      //   ),
     )
     );
   }

@@ -4,7 +4,7 @@ import 'package:http/http.dart'
 import 'ekatalog.dart';
 
 class ServiceEkatalog{
-  static const ROOT = 'http://192.168.100.170/EkatalogDB/ekatalog_action.php';
+  static const ROOT = 'http://monitoringpengadaam.000webhostapp.com/EkatalogDB/ekatalog_action.php';
   static const _CREATE_TABLE_ACTION = 'CREATE_TABLE';
   static const _GET_LPSE_ACTION = 'GET_LPSE';
   static const _ADD_CATALOG = 'ADD_CAT';

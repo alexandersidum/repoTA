@@ -7,6 +7,7 @@ import 'package:Monitoring/Komponen/kustom_button.dart';
 import 'package:Monitoring/Tampilan/SignUp.dart';
 import 'package:Monitoring/Tampilan/TambahStatus.dart';
 import 'package:Monitoring/Tampilan/TambahUnit.dart';
+import 'package:Monitoring/Tampilan/TambahSumberDana.dart';
 import 'package:Monitoring/konstan.dart';
 import 'package:flutter/material.dart';
 
@@ -51,8 +52,8 @@ class _DashboardState extends State<Dashboard> {
     return Scaffold(
       body:Container(
         padding: EdgeInsets.all(1),
-          child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+          child: ListView(
+              // crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
             Padding(
               padding: EdgeInsets.all(18.0),
@@ -146,7 +147,15 @@ class _DashboardState extends State<Dashboard> {
                   },)
                   ]
                 
-                  )
+                  ),
+                  RaisedButton(
+                  color: Colors.greenAccent,
+                  child: Text("Menambah Sumber Dana"),
+                  onPressed: (){
+                     Navigator.push(context, MaterialPageRoute(
+                      builder: (context) => TambahSumberDana()));
+            
+                  },),
             
             
 
@@ -181,8 +190,8 @@ class _DashboardState extends State<Dashboard> {
       return Scaffold(
       body:Container(
         padding: EdgeInsets.all(1),
-          child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+          child: ListView(
+              // crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
             Padding(
               padding: EdgeInsets.all(18.0),

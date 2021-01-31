@@ -5,12 +5,11 @@ import 'package:http/http.dart'
 // import 'UsulanStatus.dart';
 
 class ServiceUnit{
-  static const ROOT = 'http://192.168.100.170/EkatalogDB/entryUnit_action.php';
+  static const ROOT = 'http://monitoringpengadaam.000webhostapp.com/EkatalogDB/entryUnit_action.php';
   static const _CREATE_TABLE_ACTION = 'CREATE_TABLE';
   static const _GET_UNIT = 'GET_UNIT';
   static const _ADD_UNIT = 'ADD_UNIT';
-  // static const _UPDATE_REK_ACTION = 'UPDATE_REK';
-  // static const _DELETE_REK_ACTION = 'DELETE_REK';
+
 
 static Future<String> createTable() async {
   try{

@@ -6,7 +6,7 @@ import 'package:http/http.dart'
 import 'prosesKegiatan.dart';
 
 class ServicePengadaan{
-  static const ROOT = 'http://192.168.100.170/EkatalogDB/pengadaan_action.php';
+  static const ROOT = 'http://monitoringpengadaam.000webhostapp.com/EkatalogDB/pengadaan_action.php';
   static const _CREATE_TABLE_ACTION = 'CREATE_TABLE';
   static const _GET_PRO_ACTION = 'GET_PRO';
   static const _GET_FILTER = 'GET_FILTER';
